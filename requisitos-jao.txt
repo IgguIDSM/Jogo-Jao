@@ -1,0 +1,103 @@
+esenvolver um jogo no estilo Text Adventure (também conhecido como aventura de texto) utilizando a linguagem de programação Python. Este projeto tem como objetivo aplicar conceitos de programação e trabalho em equipe para criar uma experiência interativa baseada em texto. Caso tenha outra ideia, desde que siga os mesmos padrões, informe antes.
+
+Requisitos Obrigatórios
+
+1. Desenvolvimento do Jogo
+
+Criar um jogo completo de Text Adventure em Python;
+
+O jogo deve funcionar através da interface de linha de comando (terminal);
+
+Implementar um sistema de navegação entre diferentes "cenas";
+
+Incluir pelo menos dois finais possíveis baseados nas escolhas do jogador;
+
+2. Complexidade e Criatividade
+
+A complexidade de criação é livre, dentro dos requisitos mínimos estabelecidos;
+
+Serão valorizadas implementações criativas e originais;
+
+Possíveis elementos extras (opcionais) para aumentar a complexidade:
+
+Sistema de combate;
+
+Personagens não-jogáveis (NPCs) com diálogos;
+
+Enigmas e puzzles
+
+Sistema de pontuação ou conquista; e/ou sistema de inventário
+
+3. Organização do Trabalho
+
+Formação de grupos de 3 a 5 alunos (não é permitido trabalho individual ou em dupla, caso muito justificável, me procurar para conversar. Mas trabalhar em grupo irá contribuir para o desenvolvimento de soft skills importantes)
+
+Cada membro do grupo deve ter contribuições identificáveis no projeto
+
+4. Versionamento e Entrega
+
+O código deve ser hospedado em um repositório GitHub (Coloquei algumas referências, mas vou gravar um vídeo com algumas duvidas básicas quem podem surgir) e deverá incluir a conta que vou indicar como colaborador (Em breve vou informar)
+
+O repositório deve conter:
+
+Todo o código-fonte do jogo
+
+Um arquivo README.md detalhado
+
+Histórico de commits mostrando o progresso do desenvolvimento (A medida que vocês forem atualizando, será possível verificar)
+
+Nomes e números de matrícula de todos os integrantes no README
+
+Adicionar como colaborador: juninhotester007@gmail.com e todos os integrantes do grupo
+
+5. Documentação (README)
+
+O arquivo README.md deve incluir:
+
+Título e descrição breve do jogo
+
+Instruções detalhadas de instalação, incluindo requisitos e dependências
+
+Ferramentas e bibliotecas utilizadas no desenvolvimento (se houver)
+
+Manual de como jogar, incluindo comandos disponíveis
+
+Descrição das principais funcionalidades implementadas
+
+Divisão de tarefas entre os membros do grupo
+
+Screenshots do jogo em funcionamento (com explicações)
+
+Critérios de Avaliação
+
+Funcionalidade (30%): O jogo funciona conforme o esperado
+
+Criatividade (25%): Originalidade da história, mecânicas de jogo e implementações
+
+Código (20%): Organização e legibilidade
+
+Documentação (15%): Qualidade do README
+
+Trabalho em equipe (10%): Distribuição equilibrada de contribuições no repositório
+
+Prazos e Entrega
+
+Data de entrega: 28/05/2025
+
+A entrega será feita através do envio do link do repositório GitHub e deverá ser compartilhado com a conta que irei criar (Irei compartilhar em breve, pois vou gravar um vídeo explicando como fazer)
+
+Apresentação em sala: Cada grupo terá 5 minutos para demonstrar o jogo funcionando
+
+Observações importantes:
+
+Vou gravar um vídeo com algumas possíveis dúvidas, então sem desespero!
+
+Como informado, o nível de complexidade é variado, considerando que foi informado sobre ele desde o primeiro dia de aula (ou pensado), o prazo é mais que suficiente
+
+É permitido o uso de bibliotecas Python (mas não obrigatório)
+
+Saber pesquisar e se virar diferencia o bom profissional do profissional mais ou menos . 
+
+Evite terceirizar tudo para IAs. Elas podem ajudar a aumentar a produtividade, mas vocês precisam desenvolver o raciocínio lógico, e neste momento terceirizar todo seu raciocínio nao será positivo para o seu desenvolvimento. Um bom profissional sabe escrever bem. Pratique a escrita.
+
+Caso tenha algum contraponto ou dificuldade, me procure para conversar. Caso seja necessário alguma adaptação na entrega, podemos verificar.
