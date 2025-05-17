@@ -1,0 +1,21 @@
+Dojo = [
+    'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'X                                                                                                                           X',
+    'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+]
+#
