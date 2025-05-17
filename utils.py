@@ -1,4 +1,5 @@
 import os;
+import curses;
 import math;
 import mapa;
 
@@ -11,6 +12,13 @@ class Vector2:
     def Distance(self,toVector):
         return (math.sqrt((self.x - toVector.x)**2 + (self.y - toVector.y)**2));
 
+#
+def GetOpositeDoor(porta):
+    if porta == "L": return "O"
+    if porta == "O" : return "L"
+    if porta == "N" : return "S"
+    if porta == "S" : return "N";
+#
 
 #Funcões utilitárias
 #Limpa a tela
@@ -18,21 +26,22 @@ def ClearConsole():
     os.system('cls' if os.name == 'nt' else 'clear');
 
 #
-def RenderRoom(room):
+def RenderRoom(stdscr,room : list, PlayerPosition : Vector2,PlayerModel : str):
     mapSize = GetRoomSize(room=room);
-    pos = Vector2(20,60);
+    pos = PlayerPosition;
     #Renderizamos o mapa de maneira Horizontal
-    for y in range(mapSize[0]):
+    for y in range(mapSize.y):
         #Primeiro iteramos sobre a linha -> Eixo Y
-        for x in range(mapSize[1]):
+        for x in range(mapSize.x):
             #Depois sobre a coluna -> Eixo X
             #Aqui verificamos se a posição do player é a que está sendo iterada. se for, renderizamos ele, se não, renderiza objeto do mapa
-            #if pos == Vector2(20,60):
-            #    print("i",end="");
-            #else:
-            print(f"{room[x][y]}",end="");
-        print("")
+            if pos.x == x and pos.y == y:
+                stdscr.addstr(y,x,PlayerModel);
+            else:
+                stdscr.addstr(y,x,f"{room[y][x]}");
+    stdscr.addstr("\n");
+
 #
 def GetRoomSize(room):
-    return (len(room[0]),len(room));
+    return Vector2(len(room[0]),len(room));
         
