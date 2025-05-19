@@ -1,7 +1,8 @@
 import os;
 import curses;
 import math;
-import mapa;
+import Player;
+from mapa import *;
 
 #Objetos
 class Vector2:
@@ -11,14 +12,42 @@ class Vector2:
     #
     def Distance(self,toVector):
         return (math.sqrt((self.x - toVector.x)**2 + (self.y - toVector.y)**2));
-
 #
-def FindDoor(door : str, room : dict):
+#Detecta Colisões
+def DetectCollision(pPos : Vector2, player : Player):
+    '''
+    Detector de Colisões do Jogador baseado na posição futura dele.
+
+    Args:
+        pPos (Vector2) : posição futura do jogador para verificar colisão, caso esteja colidindo retorna True, se não, Falso.
+    '''
+    sala = MAPA[player.GetSala()];
+    oldPos = player.GetPosition();
+    if sala[pPos.y + oldPos.y][pPos.x + oldPos.x] in OBJETOS_DE_COLISAO: return True;
+    return False;
+#
+def IsPlayerOnDoor(pPos: Vector2,player : Player):
+    '''
+    Retorna se o jogador está colidindo com uma porta baseado na nova posição desejada
+
+    Args:
+        pPos(Vector2): Posição futura do jogador.
+        sala(str): Nome da sala atual do jogador (pode ser adquirido usando player.GetSala())
+
+    Returns: retorna a porta da sala que o jogador se encontra, podendo ser (N,S,L,O), se não estiver em uma porta, retorna falso.
+    '''
+    sala = player.GetSala();
+    sala_atual = MAPA[sala];
+    oldPos = player.GetPosition();
+    if sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x] in PORTAS[sala]: return sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x];
+    return False;
+#
+def AcharPorta(porta : str, sala : dict):
     #Tentamos encontrar a porta no mapa
-    mapSize = GetRoomSize(room);
+    mapSize = GetRoomSize(sala);
     for y in range(mapSize.y):
         for x in range(mapSize.x):
-            if room[y][x] == door:
+            if sala[y][x] == porta:
                 return Vector2(x,y);
     return False;
 #
