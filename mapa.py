@@ -1,7 +1,7 @@
-collObjects = ["_","|"];
+OBJETOS_DE_COLISAO = ["_","|"];
 
 
-DOORS = {
+PORTAS = {
     'Dojo': {'L' : 'Sala dos Baús', 'N' : 'Quarto', 'S' : 'Teatro'},
     'Sala dos Baús': {'O' : 'Dojo'}
 }
@@ -21,7 +21,7 @@ MAPA = {
         '|                                |                                                                                          |',
         '|                                |                                                                                          |',
         '|                                |                                                                                          |',
-        '|                                                                                                                           |',
+        '|                                |                                                                                          |',
         '|               (|                                                                                                          |',
         '|                                                                                                                           L',
         '|                                |                                                                                          |',

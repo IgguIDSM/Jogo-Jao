@@ -13,6 +13,23 @@ class Vector2:
         return (math.sqrt((self.x - toVector.x)**2 + (self.y - toVector.y)**2));
 
 #
+def FindDoor(door : str, room : dict):
+    #Tentamos encontrar a porta no mapa
+    mapSize = GetRoomSize(room);
+    for y in range(mapSize.y):
+        for x in range(mapSize.x):
+            if room[y][x] == door:
+                return Vector2(x,y);
+    return False;
+#
+def GetPlayerDoorPosition(porta,doorPosition):
+    dp = doorPosition;
+    if porta == "L": return Vector2(dp.x + 3,dp.y);
+    if porta == "O": return Vector2(dp.x - 3,dp.y);
+    if porta == "N": return Vector2(dp.x,dp.y + 3);
+    if porta == "S": return Vector2(dp.x,dp.y - 3);
+
+#
 def GetOpositeDoor(porta):
     if porta == "L": return "O"
     if porta == "O" : return "L"

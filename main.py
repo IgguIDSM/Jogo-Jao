@@ -1,6 +1,4 @@
 #Imports
-# -*- coding: utf-8 -*-
-import locale
 from curses import *;
 from Player import Player;
 from utils import *;
@@ -8,13 +6,11 @@ from mapa import *;
 import keyboard;
 import time;
 #
-locale.setlocale(locale.LC_ALL, '')
-#
 pause = False;
 debug = True;
 fps = 120;
 #
-#Criamos o player
+#Criamos o player, passamos nome, vida, stamina, posição inicial e o nome da sala inicial
 player = Player("Cleitin",[],100,100,Vector2(20,10),"Dojo");
 
 #Funções De Acesso Direto
@@ -23,13 +19,22 @@ def GetFPS():
 
 #Detecta Colisões
 def DetectCollision(pPos : Vector2):
+    '''
+    Detector de Colisões do Jogador baseado na posição futura dele.
+
+    Args:
+        pPos (Vector2) : posição futura do jogador para verificar colisão, caso esteja colidindo retorna True, se não, Falso.
+    '''
     sala = MAPA[player.GetSala()];
     oldPos = player.GetPosition();
-    if sala[pPos.y + oldPos.y][pPos.x + oldPos.x] in collObjects: return True;
+    if sala[pPos.y + oldPos.y][pPos.x + oldPos.x] in OBJETOS_DE_COLISAO: return True;
     return False;
 
 #Controla o Movimento do Player
 def PlayerMovement():
+    '''
+    Movimentação do Jogador, famoso WASD.
+    '''
     dir = Vector2(0,0);
     if keyboard.is_pressed('w') : 
         if not DetectCollision(Vector2(dir.x,dir.y -1)): dir = Vector2(dir.x,dir.y -1);
@@ -41,40 +46,43 @@ def PlayerMovement():
         if not DetectCollision(Vector2(dir.x +1,dir.y)): dir = Vector2(dir.x +1,dir.y);
     return dir;
 
-#Returns the door if true, else returns false
-def IsPlayerOnDoor(pPos: Vector2):
-    sala = player.GetSala();
+#
+def IsPlayerOnDoor(pPos: Vector2,sala):
+    '''
+    Retorna se o jogador está colidindo com uma porta baseado na nova posição desejada
+
+    Args:
+        pPos(Vector2): Posição futura do jogador.
+        sala(str): Nome da sala atual do jogador (pode ser adquirido usando player.GetSala())
+
+    Returns: retorna a porta da sala que o jogador se encontra, podendo ser (N,S,L,O), se não estiver em uma porta, retorna falso.
+    '''
     sala_atual = MAPA[sala];
     oldPos = player.GetPosition();
-    if sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x] in DOORS[sala]: return sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x];
+    if sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x] in PORTAS[sala]: return sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x];
     return False;
 
 
 #Mostra as Infos do Player
 def Hud(stdscr):
+    '''
+    Exibe as Informações do Jogador, como Nome da Sala, Nome do Jogador, Vida, Stamina e Inventário.
+    '''
     stdscr.addstr(f"\n");
     stdscr.addstr(f"Nome: {player.nome}\n");
     stdscr.addstr(f"Vida: {player.GetVida()}\n");
     stdscr.addstr(f"Stamina: {player.GetStamina()}\n");
     stdscr.addstr(f"Inventario: {player.GetInventario()}\n");
     stdscr.addstr(f"Sala Atual: {player.GetSala()}\n");
-#
-def FindDoor(door : str, room : dict):
-    #Tentamos encontrar a porta no mapa
-    mapSize = GetRoomSize(room);
-    for y in range(mapSize.y):
-        for x in range(mapSize.x):
-            if room[y][x] == door:
-                return Vector2(x,y);
-    return False;
-#
-def GetPlayerDoorPosition(porta,doorPosition):
-    dp = doorPosition;
-    if porta == "L": return Vector2(dp.x + 3,dp.y);
-    if porta == "O": return Vector2(dp.x - 3,dp.y);
-    if porta == "N": return Vector2(dp.x,dp.y + 3);
-    if porta == "S": return Vector2(dp.x,dp.y - 3);
-#
+
+
+
+
+
+
+
+
+# Loop Principal do Game
 def GameLoop(stdscr):
     curses.curs_set(0);
     stdscr.nodelay(True);
@@ -91,10 +99,10 @@ def GameLoop(stdscr):
         #
         #Verifica se o player está em alguma porta, se estiver muda de cena
 
-        door = IsPlayerOnDoor(newPlayerPos);
+        door = IsPlayerOnDoor(newPlayerPos,player.GetSala());
 
         if door is not False:
-            player.SetSala(DOORS[player.GetSala()][door]);
+            player.SetSala(PORTAS[player.GetSala()][door]);
             doorPos = FindDoor(GetOpositeDoor(door),MAPA[player.GetSala()]);
             if doorPos is not False:
                 player.SetPosition(GetPlayerDoorPosition(door,doorPos));
