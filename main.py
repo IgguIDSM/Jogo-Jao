@@ -1,5 +1,6 @@
 #Imports
 from curses import *;
+from Dialogos import *;
 import Player;
 from utils import *;
 from mapa import *;
@@ -45,20 +46,40 @@ def Hud(stdscr):
     stdscr.addstr(f"Inventario: {player.GetInventario()}\n");
     stdscr.addstr(f"Sala Atual: {player.GetSala()}\n");
 
-
-
 #
-def EscreverTexto(stdscr,texto : str,delay : float = 0.05, wrapLimit : int = 50):
+def EscreverDialogo(stdscr, falante : str, dialogo : list = [], PosicaoNaTela : Vector2 = Vector2(0,0), tempoDeFala : float = 0.05, tempoEntreFalas : int = 3, tempoDeDica : int = 3):
     curses.curs_set(0);
     stdscr.nodelay(True);
-    msg = "";
-    for char in texto:
-        msg += char;
-        stdscr.addstr(0,0,msg);
+    stdscr.clear();
+    stdscr.addstr("Dica: Pressione [ESPACO] para pular as falas..");
+    stdscr.refresh();
+    sleep(tempoDeDica);
+    #Limpamos para mostrar a fala
+    stdscr.clear();
+    #
+    for i, texto in enumerate(dialogo):
+        msg = "";
+        for char in texto:
+            msg += char;
+            stdscr.addstr(PosicaoNaTela.y+i, PosicaoNaTela.x,f"{falante}: {msg}");
+            stdscr.refresh();
+            sleep(tempoDeFala);
+            #Aqui deixamos o jogador apertar espaço para pular a fala
+            if stdscr.getch() == ord(' '):
+                msg = texto;
+                stdscr.addstr(PosicaoNaTela.y+i, PosicaoNaTela.x,f"{falante}: {msg}");
+                stdscr.refresh();
+                break;
+        #Mostramos a mensagem para o Jogador saber que pode pular o tempo de espera 
+        stdscr.addstr(PosicaoNaTela.y+i, PosicaoNaTela.x,f"{falante}: {msg}");
         stdscr.refresh();
-        sleep(delay);
-        
-
+        #Esperamos o tempo normal, ou o jogador aperta o espaco para pular
+        timer = time();
+        while time() - timer < tempoEntreFalas:
+            if stdscr.getch() == ord(' '):
+                break;
+            sleep(0.05);
+        # Espera o Input do Jogador para a próxima fala
 
 #
 def TesteAnimacao(stdscr):
@@ -67,7 +88,10 @@ def TesteAnimacao(stdscr):
 
     spinner = ['-', '\\', '|', '/'];
     i = 0;
-    EscreverTexto(stdscr,"este é um texto meio longo que quero que este script escreva para testar");
+    EscreverDialogo(stdscr,"Modelo",DIALOGOS['Modelo'],Vector2(0,0),0.02,3);
+    
+
+    #Responsavel pela animação
     # while True:
         # stdscr.addstr(10, 10, spinner[i % len(spinner)]);
         # stdscr.refresh();
