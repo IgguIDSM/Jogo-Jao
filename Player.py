@@ -1,6 +1,4 @@
-from utils import *;
-
-
+from Math_Utils import Vector2;
 class Player (Vector2):
     _sala = "Dojo"; # define a sala de spawn do jogador
     #parametros do jogador

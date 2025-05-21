@@ -1,5 +1,9 @@
 OBJETOS_DE_COLISAO = ["_","|"];
 
+NPCS = {
+    'o' : 'Xamã'
+};
+
 
 PORTAS = {
     'Dojo': {'L' : 'Sala dos Baús', 'N' : 'Quarto', 'S' : 'Teatro'},

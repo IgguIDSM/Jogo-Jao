@@ -1,18 +1,6 @@
-import os;
-import curses;
-import math;
-import Player;
-from mapa import *;
-
-#Objetos
-class Vector2:
-    def __init__(self,x,y):
-        self.x = x;
-        self.y = y;
-    #
-    def Distance(self,toVector):
-        return (math.sqrt((self.x - toVector.x)**2 + (self.y - toVector.y)**2));
-#
+from Math_Utils import *;
+from Player import Player;
+from Mapa import *;
 #Detecta Colisões
 def DetectCollision(pPos : Vector2, player : Player):
     '''
@@ -25,6 +13,23 @@ def DetectCollision(pPos : Vector2, player : Player):
     oldPos = player.GetPosition();
     if sala[pPos.y + oldPos.y][pPos.x + oldPos.x] in OBJETOS_DE_COLISAO: return True;
     return False;
+
+#
+#Detecta NPCS
+def DetectNPC(pPos : Vector2, player : Player):
+    '''
+    Detector de Colisões do Jogador baseado na posição futura dele.
+
+    Args:
+        pPos (Vector2) : posição futura do jogador para verificar colisão, caso esteja colidindo retorna True, se não, Falso.
+    Returns:
+        retorna o nome do npc ou falso, caso não encontre nenhum npc
+    '''
+    sala = MAPA[player.GetSala()];
+    oldPos = player.GetPosition();
+    if sala[pPos.y + oldPos.y][pPos.x + oldPos.x] in NPCS.keys(): return NPCS[sala[pPos.y + oldPos.y][pPos.x + oldPos.x]];
+    return False;
+
 #
 def IsPlayerOnDoor(pPos: Vector2,player : Player):
     '''
@@ -41,6 +46,7 @@ def IsPlayerOnDoor(pPos: Vector2,player : Player):
     oldPos = player.GetPosition();
     if sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x] in PORTAS[sala]: return sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x];
     return False;
+
 #
 def AcharPorta(porta : str, sala : dict):
     #Tentamos encontrar a porta no mapa
@@ -50,6 +56,7 @@ def AcharPorta(porta : str, sala : dict):
             if sala[y][x] == porta:
                 return Vector2(x,y);
     return False;
+
 #
 def GetPlayerDoorPosition(porta,doorPosition):
     dp = doorPosition;
@@ -66,12 +73,6 @@ def GetOpositeDoor(porta):
     if porta == "S" : return "N";
 #
 
-#Funcões utilitárias
-#Limpa a tela
-def ClearConsole():
-    os.system('cls' if os.name == 'nt' else 'clear');
-
-#
 def RenderRoom(stdscr,room : list, PlayerPosition : Vector2,PlayerModel : str):
     mapSize = GetRoomSize(room=room);
     pos = PlayerPosition;
