@@ -1,8 +1,8 @@
 import curses;
 import time;
 import winsound;
-from Player import Player;
-from Math_Utils import Vector2;
+from Common.Player import Player;
+from Utils.Math_Utils import Vector2;
 
 PROLOGO = {
     'Narrador1' : [
@@ -64,13 +64,26 @@ DIALOGOS = {
                 ]
             ],
             [
-                'ESCOLHA' # esse parametro é para informar ao script que aqui acontece uma escolha do jogador... (NÃO É INTERPRETADO COMO FALA!!!!)
-            ]
+                'ESCOLHA', # esse parametro é para informar ao script que aqui acontece uma escolha do jogador... (NÃO É INTERPRETADO COMO FALA!!!!)
+            ],
         ],
     'Ezhariel1':
-        {
-            
-        },
+        [
+            [
+                'Ezhariel',
+                [
+                    "Agora que Você escolheu sua classe vou fazer um teste para ver suas habilidades!",
+                ],
+            ],
+            [
+                'Dica',
+                [
+                    "Pressione [ESPACO] para atacar os inimigos",
+                    "A Classe Cavaleiro consegue atacar com 5 metros de distância.",
+                    "A Classe Arqueiro tem somente 15 metros de alcance.",
+                ],
+            ],
+        ],
 }
 
 #

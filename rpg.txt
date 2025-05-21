@@ -49,6 +49,3 @@ botar uns 3 itens no andar e o item dependendo da classe escolhida como flechas 
 melhor  e alguns monstros fracos como uns 4 slimes e um esqueleto com espada pra ser um mini boss do 
 andar e dps de matar esse esqueleto aparece uma seta magica para guiar o "Player" para o segundo andar
 
-
-
-

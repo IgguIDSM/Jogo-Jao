@@ -1,8 +1,9 @@
 #Imports
-from Utils import *;
-from Math_Utils import Vector2;
-import Dialogos;
-from Mapa import *;
+from Utils.Utils import *;
+from Inimigos import Inimigos;
+from Utils.Math_Utils import Vector2;
+from Common.Dialogos import *;
+from Common.Mapa import *;
 import time;
 import curses;
 import keyboard;
@@ -12,14 +13,37 @@ debug = True;
 fps = 120;
 #
 #Criamos o player, passamos nome, vida, stamina, posição inicial e o nome da sala inicial
-player = Player("Cleitin",[],100,100,Vector2(3,6),"Entrada");
-
-
-
-
+player = Player("Cleitin","Nenhum","Nenhum",[],100,100,Vector2(3,6),"MAPA_TESTE");
+# Missao : 'Matar Slime' = [progresso,objetivo,"estado"]
+Missoes = {
+    'Matar Slimes' : [0,3,'Incompleta'],
+}
+#
+spawnedMobs: list[Inimigos.Mob] = [];
+slime = Inimigos.Mob(Vector2(3,20),"Slime","*",100,"MAPA_TESTE",2,0.6,2);
+slime.SetTarget(player);
+spawnedMobs.append(slime);
+#
 #Funções De Acesso Direto
 def GetFPS():
     return 1000 / fps;
+
+
+def MissaoManager():
+    if player.GetMissaoAtual() in Missoes.keys():
+        missao = Missoes[player.GetMissaoAtual()];
+        if missao[0] >= missao[1]:
+            Missoes[player.GetMissaoAtual()][3] = "Completa";
+
+
+
+
+
+
+
+
+
+
 
 #Controla o Movimento do Player
 def PlayerMovement():
@@ -49,11 +73,46 @@ def Hud(stdscr):
     stdscr.addstr(f"Inventario: {player.GetInventario()}\n");
     stdscr.addstr(f"Sala Atual: {player.GetSala()}\n");
 
-#
+##
+def MenuDeClasse(stdscr):
+    curses.curs_set(0);
+    stdscr.nodelay(False);
+
+    opcoes = ["Cavaleiro","Arqueiro"];
+    selecionado = 0;
+    while True:
+        stdscr.clear();
+        for i, opcao in enumerate(opcoes):
+            if i == selecionado:
+                stdscr.attron(curses.A_REVERSE);  # Destaque
+                stdscr.addstr(i, 2 - 2, "➤ " + opcao);
+                stdscr.attroff(curses.A_REVERSE);
+            else:
+                stdscr.addstr(i,2,""+opcao);
+        stdscr.refresh();
+        ##
+        tecla = stdscr.getch();
+
+        if tecla == ord('w'):
+            selecionado = (selecionado - 1) % len(opcoes);
+        elif tecla == ord("s"):
+            selecionado = (selecionado + 1) % len(opcoes);
+        elif tecla == ord(" ") or tecla in [10, 13]:
+            if opcoes[selecionado] == "Cavaleiro":
+                player.SetClasse("Cavaleiro");
+                break
+            elif opcoes[selecionado] == "Arqueiro":
+                player.SetClasse("Arqueiro");
+                break;
+
+
+
+
+##
 def Menu(stdscr,isGameRunning: bool = False):
     #TODO: colocar alteração de menu, para que caso o player tenha aberto o menu durante o jogo, apareça "Continuar" ao invés de "Iniciar".
     #TODO: caso o jogador tenha algum save, aparecerá uma opção de continuar o ultimo save.
-
+    #
     curses.curs_set(0)  # Escondemos o Cursor
     stdscr.nodelay(False); # sempre aguardamos uma tecla pro próximo Update
 
@@ -85,8 +144,8 @@ def Menu(stdscr,isGameRunning: bool = False):
                 break
             elif opcoes[selecionado] == "Novo Jogo":
                 if debug == False:
-                    Dialogos.EscreverDialogo(stdscr,player,"Narrador",Dialogos.PROLOGO["Narrador1"],Vector2(0,0),0.02,2,3,True);
-                    Dialogos.EscreverDialogo(stdscr,player,"Narrador",Dialogos.PROLOGO["Narrador2"],Vector2(0,0),0.02,2,3,True);
+                    EscreverDialogo(stdscr,player,"Narrador",PROLOGO["Narrador1"],Vector2(0,0),0.02,2,3,True);
+                    EscreverDialogo(stdscr,player,"Narrador",PROLOGO["Narrador2"],Vector2(0,0),0.02,2,3,True);
                 break;
             elif opcoes[selecionado] == "Carregar":
                 #mostra opções de saves...
@@ -99,28 +158,27 @@ def Menu(stdscr,isGameRunning: bool = False):
                 stdscr.addstr(0, 0, f"Você selecionou: {opcoes[selecionado]}");
                 stdscr.refresh();
                 stdscr.getch();
-
-
-
-
-
-
-
+#
 
 # Renderiza a sala (Não consegui manter no Utils.py porque python é cheio de palhaçada)
-def RenderRoom(stdscr,room : list, PlayerPosition : Vector2,PlayerModel : str):
+def RenderRoom(stdscr,room : list, PlayerPosition : Vector2, PlayerModel : str):
     mapSize = GetRoomSize(room);
     pos = PlayerPosition;
+    #Aqui geramos a posição dos Mobs
     #Renderizamos o mapa de maneira Horizontal
     for y in range(mapSize.y):
         #Primeiro iteramos sobre a linha -> Eixo Y
         for x in range(mapSize.x):
             #Depois sobre a coluna -> Eixo X
-            #Aqui verificamos se a posição do player é a que está sendo iterada. se for, renderizamos ele, se não, renderiza objeto do mapa
-            if pos.x == x and pos.y == y:
-                stdscr.addstr(y,x,PlayerModel);
-            else:
-                stdscr.addstr(y,x,f"{room[y][x]}");
+            #Tentamos renderizar os mobs
+            for mob in spawnedMobs:
+                p = mob.GetPosition();
+                stdscr.addstr(round(p.y),round(p.x),f"{mob.GetModel()}");
+            # Renderizamos o player
+            stdscr.addstr(pos.y,pos.x,PlayerModel);
+            #
+            #após renderizálos, renderizamos o resto do mapa
+            stdscr.addstr(y,x,f"{room[y][x]}");
     stdscr.addstr("\n");
 
 
@@ -153,7 +211,7 @@ def GameLoop(stdscr):
     # 60,10 -- posição do npc teste
     # Antes mesmo de começarmos, carregamos a intro e o menu principal
     if debug == False:
-        Dialogos.EscreverDialogo(stdscr,player,'INTRO',Dialogos.DIALOGOS['INTRO'], Vector2(0,0));
+        EscreverDialogo(stdscr,player,'INTRO',DIALOGOS['INTRO'], Vector2(0,0));
 
     #Menu
     #rodamos o menu e a partir dele fazemos o resto
@@ -170,7 +228,10 @@ def GameLoop(stdscr):
         #
         #Colisões |  o jogador só se movimenta se não bater em nada
         player.Andar(newPlayerPos);
-        #
+        # Faz os mobs andarem em direcao ao player e atacarem
+        for mob in spawnedMobs:
+            mobWalkDirection = (player._position.__sub__(mob.GetPosition())).Normalize();
+            mob.Andar(Vector2(mobWalkDirection.x * mob.GetVelocity(),mobWalkDirection.y * mob.GetVelocity()));
         #Verifica se o player está em alguma porta, se estiver muda de cena
 
         porta =  IsPlayerOnDoor(newPlayerPos,player);
@@ -187,46 +248,51 @@ def GameLoop(stdscr):
         # SE O NPC FOR O EZHARIEL
         if npc_proximo != False:
             if npc_proximo == "Ezhariel":
-                for dialStruct in Dialogos.DIALOGOS['Ezhariel']:
+                for dialStruct in DIALOGOS['Ezhariel']:
                     if dialStruct[0] == "PLAYER":
-                        Dialogos.EscreverDialogo(stdscr,player,player.nome,dialStruct[1],Vector2(0,0),0.05,3,3,False);
+                        EscreverDialogo(stdscr,player,player.nome,dialStruct[1],Vector2(0,0),0.05,3,3,False);
                     elif dialStruct[0] == "ESCOLHA":
                         #Aqui terá a escolha referente ao personagem específico!
+                        MenuDeClasse(stdscr);
+                        #Após escolher a classe, faz o resto do diálogo:
+
+                        #Ao fim da escolha atribui a primeira missão
+                        player.SetMissaoAtual("Matar Slimes");
                         pass;
                     else:
-                        Dialogos.EscreverDialogo(stdscr,player,dialStruct[0],dialStruct[1],Vector2(0,0),0.05,3,3,False);
-
-            
-
-
-
+                        EscreverDialogo(stdscr,player,dialStruct[0],dialStruct[1],Vector2(0,0),0.05,3,3,False);
 
         #-----------------------------------------------------------------------------------------------------------------------#
 
 
-
             else:
-                if len(Dialogos.DIALOGOS[npc_proximo]) == 1:
-                    Dialogos.EscreverDialogo(stdscr,npc_proximo,Dialogos.DIALOGOS[npc_proximo], Vector2(0,0));
-                if len(Dialogos.DIALOGOS[npc_proximo]) > 1:
-                    for falante,dialogo in Dialogos.DIALOGOS[npc_proximo].items():
+                if len(DIALOGOS[npc_proximo]) == 1:
+                    EscreverDialogo(stdscr,npc_proximo,DIALOGOS[npc_proximo], Vector2(0,0));
+                if len(DIALOGOS[npc_proximo]) > 1:
+                    for falante,dialogo in DIALOGOS[npc_proximo].items():
                         if falante == "PLAYER":
-                            Dialogos.EscreverDialogo(stdscr,player,player.nome,dialogo,Vector2(0,0),0.05,3,3,False);
+                            EscreverDialogo(stdscr,player,player.nome,dialogo,Vector2(0,0),0.05,3,3,False);
                         else:
-                            Dialogos.EscreverDialogo(stdscr,player,npc_proximo,dialogo,Vector2(0,0),0.05,3,3,False);
+                            EscreverDialogo(stdscr,player,npc_proximo,dialogo,Vector2(0,0),0.05,3,3,False);
 
         #Cuida dos Dialogos Durante o Jogo 
             
         #--------------------------------------------------------------------------------------------------------#
+        #CUIDA DA MISSAO ATUAL
+
+        MissaoManager();
 
         #Renderiza a Tela
         RenderRoom(stdscr,MAPA[player.GetSala()],player.GetPosition(),player.GetModel());
-        
+        if player.GetMissaoAtual() != "Nenhum":
+            stdscr.addstr(f"\nMissão Atual: {Missoes[player.GetMissaoAtual()]._nome} | {Missoes[player.GetMissaoAtual()]._progresso}/{Missoes[player.GetMissaoAtual()]._objetivo}\n");
+        else:
+            stdscr.addstr(f"\nMissão Atual: {player.GetMissaoAtual()}\n");
         #Renderiza o DEBUG se estiver habilitado
         if debug:
-            stdscr.addstr(f"\nPlayerPos: {player.GetPosition().x},{player.GetPosition().y} | NewPlayerPos: {newPlayerPos.x + player.GetPosition().x},{newPlayerPos.y + player.GetPosition().y} | Colliding: { DetectCollision(newPlayerPos,player)}\n");
+            stdscr.addstr(f"\nPlayerPos: {player.GetPosition().x},{player.GetPosition().y} | NewPlayerPos: {newPlayerPos.x + player.GetPosition().x},{newPlayerPos.y + player.GetPosition().y} | Colliding: { DetectCollision(newPlayerPos,player)})\n");
+            pass;
         #
-        
         #Renderiza a Hud
         Hud(stdscr);
         

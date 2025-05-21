@@ -1,5 +1,5 @@
-from Math_Utils import Vector2;
-class Player (Vector2):
+from Utils.Math_Utils import Vector2;
+class Npc (Vector2):
     _sala = "Dojo"; # define a sala de spawn do jogador
     #parametros do jogador
     _Model = "i"
@@ -10,8 +10,9 @@ class Player (Vector2):
     #
     _position = Vector2(0,0);
     #
-    def __init__(self,nome : str,inventario : list,vida : int,stamina : int ,position : Vector2,sala : str):
+    def __init__(self,nome : str,Model : str,inventario : list,vida : int,stamina : int ,position : Vector2,sala : str):
         self.nome = nome;
+        self._Model = Model;
         self._inventario = inventario;
         self._vida = vida;
         self._stamina = stamina;
@@ -32,9 +33,6 @@ class Player (Vector2):
     #
     def GetSala(self):
         return self._sala;
-    #
-    def SetSala(self,sala : str):
-        self._sala = sala;
     #
     def SetPosition(self,Position : Vector2):
         self._position = Position;    

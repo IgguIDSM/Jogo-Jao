@@ -6,6 +6,7 @@ NPCS = {
 
 
 PORTAS = {
+    'Entrada': {'L' : 'Dojo'},
     'Dojo': {'L' : 'Sala dos Baús', 'N' : 'Quarto', 'S' : 'Teatro'},
     'Sala dos Baús': {'O' : 'Dojo'}
 }

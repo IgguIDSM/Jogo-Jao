@@ -1,6 +1,6 @@
-from Math_Utils import *;
-from Player import Player;
-from Mapa import *;
+from Utils.Math_Utils import *;
+from Common.Player import Player;
+from Common.Mapa import *;
 #Detecta Colisões
 def DetectCollision(pPos : Vector2, player : Player):
     '''
