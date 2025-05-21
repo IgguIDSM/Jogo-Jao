@@ -14,6 +14,17 @@ def DetectCollision(pPos : Vector2, player : Player):
     if sala[pPos.y + oldPos.y][pPos.x + oldPos.x] in OBJETOS_DE_COLISAO: return True;
     return False;
 
+def DetectOtherCollision(pPos : Vector2, roomName : str):
+    '''
+    Detector de Colisões do Jogador baseado na posição futura dele.
+
+    Args:
+        pPos (Vector2) : posição futura do jogador para verificar colisão, caso esteja colidindo retorna True, se não, Falso.
+    '''
+    sala = MAPA[roomName];
+    if sala[pPos.y][pPos.x] in OBJETOS_DE_COLISAO: return True;
+    return False;
+
 #
 #Detecta NPCS
 def DetectNPC(pPos : Vector2, player : Player):

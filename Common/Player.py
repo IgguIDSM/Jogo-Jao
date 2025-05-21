@@ -9,6 +9,7 @@ class Player (Vector2):
     _Slots = 6;
     _vida = 100;
     _stamina = 100;
+    _dano = 5;
     #Internos
     _EspadaL = "\\";
     _EspadaR = "/";
@@ -18,6 +19,7 @@ class Player (Vector2):
     #
     _position = Vector2(0,0);
     _lastDir = Vector2(0,0);
+    _facingDir = Vector2(0,0);
     #
     def __init__(self,nome : str,MissaoAtual : str, classe : str, inventario : list,vida : int,stamina : int ,position : Vector2,sala : str):
         self.nome = nome;
@@ -28,6 +30,12 @@ class Player (Vector2):
         self._stamina = stamina;
         self._position = position;
         self._sala = sala;
+    #
+    def SetDamage(self,dano):
+        self._dano = dano;
+    #
+    def GetDamage(self):
+        return self._dano;
     #
     def GetMissaoAtual(self):
         return self._MissaoAtual;
@@ -62,14 +70,31 @@ class Player (Vector2):
     def SetPosition(self,Position : Vector2):
         self._position = Position;    
     #
+    def GetFacingDiretion(self):
+        return self._facingDir;
+    #
     def Andar(self,direction : Vector2):
-        self._lastDir.x = direction.x;
-        ##
+        if (direction.x != self._lastDir.x) and direction.x != 0:
+            self._lastDir.x = direction.x;
+        if (direction.y != self._lastDir.y) and direction.y != 0:
+            self._lastDir.y = direction.y;
+        #
+        self._facingDir = direction;
+        # 
         self._position.x += direction.x;
         self._position.y += direction.y;
     #
     def GetModel(self):
         if self._lastDir.x > 0:
-            return self._Model;
+            if self._Classe == "Cavaleiro":
+                return f"{self._Model}{self._EspadaR}";
+
+            if self._Classe == "Arqueiro":
+                return f"{self._Model}{self._ArcoR}";
         elif self._lastDir.x < 0:
-            return self._Model;
+            if self._Classe == "Cavaleiro":
+                return f"{self._EspadaL}{self._Model}";
+            
+            if self._Classe == "Arqueiro":
+                return f"{self._ArcoL}{self._Model}";
+        return self._Model;

@@ -1,19 +1,25 @@
 #Imports
 from Utils.Utils import *;
 from Inimigos import Inimigos;
-from Utils.Math_Utils import Vector2;
+from Utils.Math_Utils import Vector2, Projectile;
 from Common.Dialogos import *;
 from Common.Mapa import *;
 import time;
 import curses;
 import keyboard;
 #
+mousePosition = Vector2(0,0);
+#
 pause = False;
 debug = True;
 fps = 120;
+mobAttackDistance = 5;
+playerMeleeDistance = 3;
+Projectiles : list[Projectile] = [];
 #
 #Criamos o player, passamos nome, vida, stamina, posição inicial e o nome da sala inicial
 player = Player("Cleitin","Nenhum","Nenhum",[],100,100,Vector2(3,6),"MAPA_TESTE");
+player.SetClasse('Arqueiro');
 # Missao : 'Matar Slime' = [progresso,objetivo,"estado"]
 Missoes = {
     'Matar Slimes' : [0,3,'Incompleta'],
@@ -28,20 +34,44 @@ spawnedMobs.append(slime);
 def GetFPS():
     return 1000 / fps;
 
-
+#
 def MissaoManager():
     if player.GetMissaoAtual() in Missoes.keys():
         missao = Missoes[player.GetMissaoAtual()];
         if missao[0] >= missao[1]:
             Missoes[player.GetMissaoAtual()][3] = "Completa";
+#
+def SistemaDeCombate(stdscr):
+    if player.GetClasse() == "Cavaleiro":
+        if keyboard.is_pressed(' '):
+            winsound.Beep(500,5);
+            for mob in spawnedMobs:
+                if mob.DistanceToPlayer() < playerMeleeDistance:
+                    mob.Damage(player.GetDamage());
+                    if mob.GetVida() <= 0:
+                        spawnedMobs.remove(mob);
+                        del mob; #removemos a referência a este mob para wnão termos vazamento de memoria (ou memory leak).
+    
+    if player.GetClasse() == "Arqueiro":
+        key = stdscr.getch();
+        #Gerenciamos a posição do mouse por clique
+
+        if key == curses.KEY_MOUSE:
+            _, x, y, _, bstate = curses.getmouse();
+            global mousePosition;
+            mousePosition = Vector2(x,y);
+            if bstate == 0:
+                winsound.Beep(500,5);
+                Projectiles.append(Projectile(Vector2(player._position.x,player._position.y),1,Vector2(player.GetFacingDiretion().x,player.GetFacingDiretion().y)));
 
 
 
-
-
-
-
-
+def ProjectileHandler():
+    for projetil in Projectiles:
+        projetil.Translate();
+        if projetil.DistanceToPoint(player.GetPosition()) > 15 or DetectOtherCollision(projetil.GetPosition(),player.GetSala()):
+            Projectiles.remove(projetil);
+            del projetil;
 
 
 
@@ -174,7 +204,12 @@ def RenderRoom(stdscr,room : list, PlayerPosition : Vector2, PlayerModel : str):
             for mob in spawnedMobs:
                 p = mob.GetPosition();
                 stdscr.addstr(round(p.y),round(p.x),f"{mob.GetModel()}");
-            # Renderizamos o player
+                stdscr.addstr(round(p.y)+1,round(p.x)-2,f"{mob.GetBarraDeVida()}"); # renderizamos a barra de vida abaixo
+            #
+            for projetil in Projectiles:
+                pP = projetil.GetPosition();
+                stdscr.addstr(round(pP.y),round(pP.x),f"{projetil.GetModel()}"); # renderizamos o projetil para facilitar nossas lifes :D
+            # Renderizamos por ultimo o player
             stdscr.addstr(pos.y,pos.x,PlayerModel);
             #
             #após renderizálos, renderizamos o resto do mapa
@@ -190,16 +225,14 @@ def RenderRoom(stdscr,room : list, PlayerPosition : Vector2, PlayerModel : str):
 def GameLoop(stdscr):
     #Se a tela estiver muito pequena pedimos para o jogador aumentar o tamanho do console (40x130);
     curses.curs_set(0);
-    stdscr.nodelay(True);
+    curses.mousemask(curses.ALL_MOUSE_EVENTS | curses.REPORT_MOUSE_POSITION)
     frameTime = GetFPS();
     y,x = 0,0;
-    while True:
+    while x <= 130 and y <= 40:
         y,x = stdscr.getmaxyx();
         stdscr.clear();
         stdscr.addstr(f"Por Favor Aumente o Tamanho do console para (40x130)\n Tamanho Atual :({y}x{x})");
         stdscr.refresh();
-        if x >= 130 and y >= 40:
-            break;
     # se a tela está de acordo comemos batata frita
     stdscr.clear();
     stdscr.addstr(f"O Tamanho da tela Está Adequado!\n");
@@ -220,6 +253,7 @@ def GameLoop(stdscr):
     #Rodamos o GAMEE! (mas primeiro configuramos o curses pra não dar piri-paque)
     stdscr.clear();
     stdscr.refresh();
+    stdscr.nodelay(True);
     while not pause:
     #Enquanto não está pausado
         stdscr.clear();
@@ -228,10 +262,15 @@ def GameLoop(stdscr):
         #
         #Colisões |  o jogador só se movimenta se não bater em nada
         player.Andar(newPlayerPos);
+        #SISTEMA DE COMBATE
+
+        SistemaDeCombate(stdscr=stdscr);
+        ProjectileHandler();
         # Faz os mobs andarem em direcao ao player e atacarem
         for mob in spawnedMobs:
             mobWalkDirection = (player._position.__sub__(mob.GetPosition())).Normalize();
-            mob.Andar(Vector2(mobWalkDirection.x * mob.GetVelocity(),mobWalkDirection.y * mob.GetVelocity()));
+            if not DetectCollision(Vector2(round(mobWalkDirection.x),round(mobWalkDirection.y)),player) and mob.DistanceToPlayer() > mobAttackDistance:
+                mob.Andar(Vector2(mobWalkDirection.x * mob.GetVelocity(),mobWalkDirection.y * mob.GetVelocity()));
         #Verifica se o player está em alguma porta, se estiver muda de cena
 
         porta =  IsPlayerOnDoor(newPlayerPos,player);
@@ -261,10 +300,9 @@ def GameLoop(stdscr):
                         pass;
                     else:
                         EscreverDialogo(stdscr,player,dialStruct[0],dialStruct[1],Vector2(0,0),0.05,3,3,False);
-
         #-----------------------------------------------------------------------------------------------------------------------#
-
-
+            
+            #Cuida dos Dialogos Durante o Jogo 
             else:
                 if len(DIALOGOS[npc_proximo]) == 1:
                     EscreverDialogo(stdscr,npc_proximo,DIALOGOS[npc_proximo], Vector2(0,0));
@@ -275,7 +313,7 @@ def GameLoop(stdscr):
                         else:
                             EscreverDialogo(stdscr,player,npc_proximo,dialogo,Vector2(0,0),0.05,3,3,False);
 
-        #Cuida dos Dialogos Durante o Jogo 
+        
             
         #--------------------------------------------------------------------------------------------------------#
         #CUIDA DA MISSAO ATUAL
@@ -284,20 +322,21 @@ def GameLoop(stdscr):
 
         #Renderiza a Tela
         RenderRoom(stdscr,MAPA[player.GetSala()],player.GetPosition(),player.GetModel());
+        #
         if player.GetMissaoAtual() != "Nenhum":
             stdscr.addstr(f"\nMissão Atual: {Missoes[player.GetMissaoAtual()]._nome} | {Missoes[player.GetMissaoAtual()]._progresso}/{Missoes[player.GetMissaoAtual()]._objetivo}\n");
         else:
             stdscr.addstr(f"\nMissão Atual: {player.GetMissaoAtual()}\n");
         #Renderiza o DEBUG se estiver habilitado
         if debug:
-            stdscr.addstr(f"\nPlayerPos: {player.GetPosition().x},{player.GetPosition().y} | NewPlayerPos: {newPlayerPos.x + player.GetPosition().x},{newPlayerPos.y + player.GetPosition().y} | Colliding: { DetectCollision(newPlayerPos,player)})\n");
+            stdscr.addstr(f"\nPlayerPos: {player.GetPosition().x},{player.GetPosition().y} | MousePos: x:{mousePosition.x} y: {mousePosition.y} | NewPlayerPos: {newPlayerPos.x + player.GetPosition().x},{newPlayerPos.y + player.GetPosition().y} | Colliding: { DetectCollision(newPlayerPos,player)})\n");
             pass;
         #
         #Renderiza a Hud
         Hud(stdscr);
-        
+        #
         stdscr.refresh(); # damos refresh
-
+        #
         time.sleep(frameTime*0.01); # esperamos o próximo frame (como é em segundos, multiplicamos por 0.01) para ficar em milisegundos
 
 ###

@@ -23,6 +23,9 @@ class Mob (Vector2):
         self._velocidade = velocidade;
         self._tempoDeAtaque = tempoDeAtaque;
     #
+    def Damage(self,amount):
+        self._vida -= amount;
+    #
     def GetVelocity(self):
         return self._velocidade
     #
@@ -54,6 +57,14 @@ class Mob (Vector2):
         self._position.x += direction.x;
         self._position.y += direction.y;
     #
+    def _getRelativeValue(value,minimum,maximum):
+        return (value-minimum)/(maximum/minimum);
+    #
     def GetModel(self):
         return self._model;
+    #
+    def GetBarraDeVida(self):
+        am = self._vida//25;
+        return f"{'-'*am}";
+
 #----------------------------------------------------------------
