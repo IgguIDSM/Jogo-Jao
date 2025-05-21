@@ -2,7 +2,7 @@
 from Utils import *;
 from Math_Utils import Vector2;
 import Dialogos;
-import Mapa;
+from Mapa import *;
 import time;
 import curses;
 import keyboard;
@@ -12,7 +12,10 @@ debug = True;
 fps = 120;
 #
 #Criamos o player, passamos nome, vida, stamina, posição inicial e o nome da sala inicial
-player = Player("Cleitin",[],100,100,Vector2(20,10),"Dojo");
+player = Player("Cleitin",[],100,100,Vector2(3,6),"Entrada");
+
+
+
 
 #Funções De Acesso Direto
 def GetFPS():
@@ -54,7 +57,7 @@ def Menu(stdscr,isGameRunning: bool = False):
     curses.curs_set(0)  # Escondemos o Cursor
     stdscr.nodelay(False); # sempre aguardamos uma tecla pro próximo Update
 
-    opcoes = ["Iniciar", "Carregar", "Salvar", "Opções", "Sair"] # OPÇÔESS!
+    opcoes = ["Novo Jogo", "Carregar", "Salvar", "Opções", "Sair"] # OPÇÔESS!
     if isGameRunning : opcoes[0] = "Continuar";
     selecionado = 0;
 
@@ -80,7 +83,10 @@ def Menu(stdscr,isGameRunning: bool = False):
         elif tecla == ord(" ") or tecla in [10, 13]:
             if opcoes[selecionado] == "Sair":
                 break
-            elif opcoes[selecionado] == "Iniciar":
+            elif opcoes[selecionado] == "Novo Jogo":
+                if debug == False:
+                    Dialogos.EscreverDialogo(stdscr,player,"Narrador",Dialogos.PROLOGO["Narrador1"],Vector2(0,0),0.02,2,3,True);
+                    Dialogos.EscreverDialogo(stdscr,player,"Narrador",Dialogos.PROLOGO["Narrador2"],Vector2(0,0),0.02,2,3,True);
                 break;
             elif opcoes[selecionado] == "Carregar":
                 #mostra opções de saves...
@@ -101,38 +107,59 @@ def Menu(stdscr,isGameRunning: bool = False):
 
 
 
+# Renderiza a sala (Não consegui manter no Utils.py porque python é cheio de palhaçada)
+def RenderRoom(stdscr,room : list, PlayerPosition : Vector2,PlayerModel : str):
+    mapSize = GetRoomSize(room);
+    pos = PlayerPosition;
+    #Renderizamos o mapa de maneira Horizontal
+    for y in range(mapSize.y):
+        #Primeiro iteramos sobre a linha -> Eixo Y
+        for x in range(mapSize.x):
+            #Depois sobre a coluna -> Eixo X
+            #Aqui verificamos se a posição do player é a que está sendo iterada. se for, renderizamos ele, se não, renderiza objeto do mapa
+            if pos.x == x and pos.y == y:
+                stdscr.addstr(y,x,PlayerModel);
+            else:
+                stdscr.addstr(y,x,f"{room[y][x]}");
+    stdscr.addstr("\n");
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#-----------------------------------------------------------------------#
 
 
 
 # Loop Principal do Game
 def GameLoop(stdscr):
-
+    #Se a tela estiver muito pequena pedimos para o jogador aumentar o tamanho do console (40x130);
+    curses.curs_set(0);
+    stdscr.nodelay(True);
     frameTime = GetFPS();
+    y,x = 0,0;
+    while True:
+        y,x = stdscr.getmaxyx();
+        stdscr.clear();
+        stdscr.addstr(f"Por Favor Aumente o Tamanho do console para (40x130)\n Tamanho Atual :({y}x{x})");
+        stdscr.refresh();
+        if x >= 130 and y >= 40:
+            break;
+    # se a tela está de acordo comemos batata frita
+    stdscr.clear();
+    stdscr.addstr(f"O Tamanho da tela Está Adequado!\n");
+    stdscr.addstr(f"Iniciando o Jogo...");
+    stdscr.refresh();
+    time.sleep(2);
+    #
+
     # 60,10 -- posição do npc teste
     # Antes mesmo de começarmos, carregamos a intro e o menu principal
-    Dialogos.EscreverDialogo(stdscr,'INTRO',Dialogos.DIALOGOS['INTRO'], Vector2(0,0));
+    if debug == False:
+        Dialogos.EscreverDialogo(stdscr,player,'INTRO',Dialogos.DIALOGOS['INTRO'], Vector2(0,0));
+
     #Menu
     #rodamos o menu e a partir dele fazemos o resto
     Menu(stdscr);
+
     #Rodamos o GAMEE! (mas primeiro configuramos o curses pra não dar piri-paque)
-    curses.curs_set(0);
-    stdscr.nodelay(True);
     stdscr.clear();
     stdscr.refresh();
     while not pause:
@@ -149,26 +176,51 @@ def GameLoop(stdscr):
         porta =  IsPlayerOnDoor(newPlayerPos,player);
 
         if porta is not False:
-            player.SetSala(Mapa.PORTAS[player.GetSala()][porta]);
-            posicao_porta =  AcharPorta( GetOpositeDoor(porta),Mapa.MAPA[player.GetSala()]);
+            player.SetSala(PORTAS[player.GetSala()][porta]);
+            posicao_porta =  AcharPorta(GetOpositeDoor(porta),MAPA[player.GetSala()]);
             if posicao_porta is not False:
-                player.SetPosition( GetPlayerDoorPosition(porta,posicao_porta));
+                player.SetPosition(GetPlayerDoorPosition(porta,posicao_porta));
         
         #antes de renderizar qualquer coisa, damos prioridade as camadas de tela
         #diálogo
         npc_proximo = DetectNPC(newPlayerPos,player);
+        # SE O NPC FOR O EZHARIEL
         if npc_proximo != False:
-            Dialogos.EscreverDialogo(stdscr,npc_proximo,Dialogos.DIALOGOS[npc_proximo], Vector2(0,0));
-        
+            if npc_proximo == "Ezhariel":
+                for dialStruct in Dialogos.DIALOGOS['Ezhariel']:
+                    if dialStruct[0] == "PLAYER":
+                        Dialogos.EscreverDialogo(stdscr,player,player.nome,dialStruct[1],Vector2(0,0),0.05,3,3,False);
+                    elif dialStruct[0] == "ESCOLHA":
+                        #Aqui terá a escolha referente ao personagem específico!
+                        pass;
+                    else:
+                        Dialogos.EscreverDialogo(stdscr,player,dialStruct[0],dialStruct[1],Vector2(0,0),0.05,3,3,False);
+
+            
 
 
 
 
 
 
+
+
+            else:
+                if len(Dialogos.DIALOGOS[npc_proximo]) == 1:
+                    Dialogos.EscreverDialogo(stdscr,npc_proximo,Dialogos.DIALOGOS[npc_proximo], Vector2(0,0));
+                if len(Dialogos.DIALOGOS[npc_proximo]) > 1:
+                    for falante,dialogo in Dialogos.DIALOGOS[npc_proximo].items():
+                        if falante == "PLAYER":
+                            Dialogos.EscreverDialogo(stdscr,player,player.nome,dialogo,Vector2(0,0),0.05,3,3,False);
+                        else:
+                            Dialogos.EscreverDialogo(stdscr,player,npc_proximo,dialogo,Vector2(0,0),0.05,3,3,False);
+
+        #Cuida dos Dialogos Durante o Jogo 
+            
+        #--------------------------------------------------------------------------------------------------------#
 
         #Renderiza a Tela
-        RenderRoom(stdscr,room=Mapa.MAPA[player.GetSala()],PlayerPosition=player.GetPosition(),PlayerModel=player.GetModel());
+        RenderRoom(stdscr,MAPA[player.GetSala()],player.GetPosition(),player.GetModel());
         
         #Renderiza o DEBUG se estiver habilitado
         if debug:
@@ -184,10 +236,16 @@ def GameLoop(stdscr):
 
 ###
 #iniciamos o game mas garantimos que nada vai dar errado ;-;
-if __name__ == "__main__":
-    try:
-        curses.wrapper(GameLoop);
-    except Exception as e:
-        print("Ocorreu um erro:");
-        print(e);
-        input("Pressione Enter para sair...");
+
+if __name__ == '__main__':
+    curses.wrapper(GameLoop);
+
+
+
+# if __name__ == "__main__":
+    # try:
+        # curses.wrapper(GameLoop);
+    # except Exception as e:
+        # print("Ocorreu um erro:");
+        # print(e);
+        # input("Pressione Enter para sair...");

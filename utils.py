@@ -44,7 +44,20 @@ def IsPlayerOnDoor(pPos: Vector2,player : Player):
     sala = player.GetSala();
     sala_atual = MAPA[sala];
     oldPos = player.GetPosition();
-    if sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x] in PORTAS[sala]: return sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x];
+    if PORTAS.__contains__(sala):
+        if sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x] in PORTAS[sala]: return sala_atual[pPos.y + oldPos.y][pPos.x + oldPos.x];
+    return False;
+#
+
+
+def AcharSpawn(spawnPoint : str, sala : dict):
+    #Tentamos achar o spawn no mapa
+    mapSize = GetRoomSize(sala);
+    for y in range(mapSize.y):
+        for x in range(mapSize.x):
+            if sala[y][x] == spawnPoint:
+                sala[y][x].replace(spawnPoint," ");
+                return Vector2(x,y);
     return False;
 
 #
@@ -73,20 +86,6 @@ def GetOpositeDoor(porta):
     if porta == "S" : return "N";
 #
 
-def RenderRoom(stdscr,room : list, PlayerPosition : Vector2,PlayerModel : str):
-    mapSize = GetRoomSize(room=room);
-    pos = PlayerPosition;
-    #Renderizamos o mapa de maneira Horizontal
-    for y in range(mapSize.y):
-        #Primeiro iteramos sobre a linha -> Eixo Y
-        for x in range(mapSize.x):
-            #Depois sobre a coluna -> Eixo X
-            #Aqui verificamos se a posição do player é a que está sendo iterada. se for, renderizamos ele, se não, renderiza objeto do mapa
-            if pos.x == x and pos.y == y:
-                stdscr.addstr(y,x,PlayerModel);
-            else:
-                stdscr.addstr(y,x,f"{room[y][x]}");
-    stdscr.addstr("\n");
 
 #
 def GetRoomSize(room):
