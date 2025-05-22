@@ -12,8 +12,11 @@ class Mob (Vector2):
     _tempoDeAtaque = 0;
     _position = Vector2(0,0);
     _target = Player;
+    _mobTick = 0;
+    #CallBacks
+    _onMobKilledCallBack = None;
     #
-    def __init__(self,spawnPosition : Vector2, nome : str, modelo : str, vida : int, sala : str, dano : int, velocidade : int, tempoDeAtaque : float):
+    def __init__(self,spawnPosition : Vector2, nome : str, modelo : str, vida : int, sala : str, dano : int, velocidade : int, tempoDeAtaque : float, OnMobKilledCallBack = None):
         self._position = spawnPosition;
         self._model = modelo;
         self._nome = nome;
@@ -22,9 +25,19 @@ class Mob (Vector2):
         self._dano = dano;
         self._velocidade = velocidade;
         self._tempoDeAtaque = tempoDeAtaque;
+        self._onMobKilledCallBack = OnMobKilledCallBack;
+    #
+    def MobTick(self,frameTime):
+        self._mobTick += frameTime;
+    #
+    def ResetMobTick(self):
+        self._mobTick = 0;
     #
     def Damage(self,amount):
         self._vida -= amount;
+    #
+    def GetDamage(self):
+        return self._dano;
     #
     def GetVelocity(self):
         return self._velocidade
@@ -52,6 +65,10 @@ class Mob (Vector2):
     #
     def DistanceToPlayer(self):
         return self._position.Distance(self._target.GetPosition());
+    #
+    def OnMobKilled(self):
+        if self._onMobKilledCallBack != None:
+            self._onMobKilledCallBack();
     #
     def Andar(self,direction : Vector2):
         self._position.x += direction.x;

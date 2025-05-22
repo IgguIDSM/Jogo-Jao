@@ -7,6 +7,7 @@ class Npc (Vector2):
     _Slots = 6;
     _vida = 100;
     _stamina = 100;
+    _interagiu = False;
     #
     _position = Vector2(0,0);
     #
@@ -18,6 +19,12 @@ class Npc (Vector2):
         self._stamina = stamina;
         self._position = position;
         self._sala = sala;
+    #
+    def SetInteracted(self):
+        self._interagiu = True;
+    #
+    def canInteract(self):
+        return self._interagiu == False;
     #
     def GetInventario(self):
         return self._inventario

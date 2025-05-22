@@ -1,0 +1,118 @@
+"Player" morador do Reino de Valdaryen era um jovem que seguiu os passos de sua familia e se tornou um mercador,apos ganhar sua própria carruagem dada de presente por seu pai ele foi em busca de fazer seu dinheiro, chegando na guilda de mercadores ele foi a procura de sua primeira missão e viu uma no mural pedindo um carregamento de suprimentos para o Reino de Lunareth quer era um forte aliado ao seu reino e que estava passando por dificuldades por conta de uma guerra contra as dungeos que estavam se espalhando pelo mundo, então ele decidiu aceitar fazer um carregamento de suprimentos de um reino ao outro
+
+Então "Player" teria um dia para se preparar para a missão e partir logo de manhã no outro dia, por recomendação da guilda ele teria 4 aventureiros fazendo sua escolta para manter sua segurança pois o caminho pode conter bandidos e monstros magicos perigosos.
+ Chegando o dia de sua primeira missão eles partiram em direção ao Reino de Lunareth, após algun minutos andando os aventureiros perceberam que o caminho não estava totalmente normal, sempre tinham slimes ao redor desse caminho e não havia um sequer, ao escutarem um barulho na mata todos entraram em formação de luta, da mata saiu um monstro magico de rank elevado para aquele grupo de aventureiros então eles tentaram recuar, mas logo após a tentativa de retirada o monstro mandou uma bola de fogo em direção a carruagem de "Player", caido no chão "Player" viu uma pedra brilhante que jamais tinha visto em sua vida, pensando ser uma pedra magica ele a pegou para tacar em direção ao monstro, mas acabou sendo teletransportado para uma dungeo
+
+Assustado sem entender oque aconteceu "Player" chama por seus aliados mas aparece em sua frente com um forte brilho um senhor dizendo ser o guia da dungeo e que ira o ajuda-lo
+
+"Ezhariel" - Olá jovem aventureiro, seja bem vindo a dungeo Cripta da Luminária Perdida, eu me chamo Ezhariel, o Portador da Luz Esquecida e serei o seu guia para essa dungeo, mas vejo que você não aparenta ser um aventureiro certo?
+
+narrador: "Player" ainda assustado responde:
+
+"Player" - Sim, sou apenas um mercador que estava em uma missão de entrega de suprimentos
+
+"Ezhariel" - Bom, sendo assim, eu lhe consederei uma classe de sua escolhe para adentrar a dungeo, você deseja ser um "Cavaleiro" ou um "Arqueiro?
+
+escolha do "Player":...
+
+"Ezhariel" Agora que você escolheu sua classe vou fazer um teste para ver suas habilidades
+
+narrador: ele invoca um slime em sua frente para testa-lo
+depois de matar o slime:
+
+"Ezhariel" Parabéns, vejo que você leva jeito para ser um grande aventureiro, então irei te explicar sobre a dungeo que estamos, esta dungeo é bem mais antiga que as comuns que existem por ai e ela possui 4 andares com cada uma tendo sua dificuldade maior e o quarto andar sendo a sala do chefe da dungeo, estamos no primeiro andar onde você pode vasculhar e matar monstros mais fracos a procura de itens para melhorias
+
+botar uns 3 itens no andar e o item dependendo da classe escolhida como flechas diferentes ou uma espada melhor  e alguns monstros fracos como uns 4 slimes e um esqueleto com espada pra ser um mini boss do andar e dps de matar esse esqueleto aparece uma seta magica para guiar o "Player" para o segundo andar
+
+
+
+SEGUNDO ANDAR 
+
+
+
+narrador: ao chegar no segundo andar "Player" se depara com um ambiente mais aberto com algumas vegetações, e logo a sua frente aparece uma elfa que vai lhe dar sua proxima missão
+
+"Sylveris" - Ola jovem aventureiro, bem vindo ao segundo andar da dungeon, eu sou Sylveris, a Guardiã da Lâmina da Luz, e te darei sua proxima missão, apos completar-la você ganhara um item de sua escolha
+
+"Sylveris - Sua missão é derrotar as larvas gigantes e encontrar a chave para o terceiro andar que esta dentro do corpo de uma delas
+
+eu: bota umas 4 larvas 
+
+narrador: Depois de receber a missão de Sylveris ela desaparece e um pergaminho com a quantidade de larvas que precisam ser derrotadas aparece em sua mão, ao derrotar uma larva o pergaminho se altera para a quantidade de larvas restantes
+
+narrador: Depois de derrotar todas as larvas e encontrar a chave perdida o pergaminho brilha e Sylveris sai do pergaminho
+
+"Sylveris" Parabéns aventureiro, você foi incrivel nessa missão derrotando esse monstros, como prometido você tem duas opções de escolha: O Anel da Emersão e o Colar de Vínculo
+
+eu: (isso é só pra vc saber oq cada um faz)   
+
+Anel da Emersão(final principal): Após vencer Ezhariel no 4º andar, o protagonista desperta fora da dungeon, mantendo todas as habilidades adquiridas.le está livre, como se a dungeon fosse apenas um desafio superado e Ezhariel é selado novamente.
+A dungeon desaparece.
+
+O Colar de Vínculo Eterno(final alternativo): O colar silenciosamente registra tudo o que o protagonista vê e sente dentro da dungeon, ao vencer Ezhariel no 4º andar, o colar absorve parte da essência dele, revelando que Ezhariel era, na verdade, um aventureiro que venceu a dungeon mas aceitou o colar como item .
+
+narrador: Depois de aceitar o "item_escolhido" "Player" vai em direção a porta magica e usa a chave que encontrou dentro da larva gigante para abrir a porta para o prixmo andar
+
+(Apenas se o "Player" escolher o Colar e passar pela porta) "Sylveris" - Pobre aventureiro, não sabe o destino que lhe aguarda
+(Lembrando que as portas fecham apos o jogador passar)
+
+
+TERCEIRO ANDAR
+
+
+
+narrador: ao chegar no terceiro andar "Player" se depara com um ambiente com neve e de repente uam forte nevasca passa na frente de "Player" e dessa nevasca aparece Gorzhak, um orc de gelo 
+
+"Gorzhak" - Ola aventureiro, vejo que conseguiu vencer o desafio de Sylveris, eu sou Gorzhak, o Coração Congelado da Montanha Partida, e lhe darei sua ultima missão que lhe concedera uma habilidade poderosa para usa-la contra o chefe da masmorra
+
+"Gorzhak" - sua missão é enfrentar três espectros de gelo espalhados em áreas separadas do terceiro andar, mas saiba que eles não são iguais os monstros enfrentados antes
+
+o primeiro é Velkar, a Lâmina Quebrada, um espectro de um antigo guerreiro que usa ataques rápidos e cria duplicatas falsas geladas.
+o segundo é Aylha, a Que Sussurra, uma ex-maga que ataca com feitiços ilusórios e desaceleração mental
+e o terceiro e mais forte é Thornak, o Indomavel um gigante de gelo que só acorda quando alguem o incomoda. 
+
+
+"Gorzhak" - Apos derrotar Velkar você podera avançar para a sala de Aylha e apos derrota-la a sala de Thornak sera aberta.
+quando derrotados cada um deixara um fragmento de voz gélida, quando coletar os 3 fragmentos eu irei retornar
+
+narrador: Depois de entregar a missão Gorzhak some junto com a neve
+
+narrador: "Player" escuta um sussuro que o guia em direção a sala de Velkar, chegando em sua sala Velkar diz a "Player"
+
+Velkar - Vejo que você teve coragem o suficiente para me enfrentar, mas saiba que eu fui um grande guerreiro quando vivo e não serei derrotado facilmente
+
+Velkar -  VENHA AVENTUREIRO!!!
+
+eu: dps de ser derrotado
+
+Velkar - você foi incrivel batalhando, obrigado por me libertar dessa prisão sem fim, boa sorte em seus proximos desafios grande aventureiro
+
+Velkar - aventureiro cuidado esta dungeon é.....
+
+narrador: antes de terminar sua fala Velkar começa a virar poeira e quando some por completo,de repente cai de seu corpo o primeiro fragmento de voz gélida
+
+narrador: depois de sua vitoria contra o primeiro espectro "Player" ve que em sua frente um novo caminho surge diante da parede de gelo e uma seta magica o guia para a passagem
+
+narrador: entrando no caminho logo a frente "Player" ve que ao fundo da sala tem alguem o esperando, de repente sua voz ecoa em toda sala e o espectro se apresenta 
+
+"Aylha" - Ola aventureiro eu sou a grande maga Aylha e irei destruir você nessa batalha
+
+"Aylha" - saiba que sou incrivel poderosa e não serei derrota por um fraco aventureiro
+
+eu: dps de ir de vasco
+
+"Aylha" como você superou a minha magia aventureiro? bem, eu fui finalmente libertada graças a você, mas saiba que essa dungeo não é uma dungeo comum, essa dungeo cons....
+
+narrador: Aylha apos ser derrotada tambem virou poeira em frente a "Player" sem conseguir terminar sua fala, mas de seu corpo cai o segundo fragmento de voz gélida
+
+narrador: Logo em sua frente a sala do ultimo espectro surge e diferente dos outros esse espectro é possivel ver de longe, um grande gigante de gelo em sono profundo 
+
+narrador logo ao entrar na sala "Player" acaba pisando em alguns galhos secos no chão acordando Thornak
+
+"Thornak" - Olha para "Player" 
+
+
+
+
+
+

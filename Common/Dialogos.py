@@ -1,4 +1,5 @@
 import curses;
+import keyboard;
 import time;
 import winsound;
 from Common.Player import Player;
@@ -30,6 +31,16 @@ PROLOGO = {
     ]
 }
 
+DICAS = {
+    'DICA_COMBATE':
+    [
+        "Pressione [ESPACO] para atacar os inimigos",
+        "A Sua distância de ataque é de 5 metros",
+        "Os Mobs conseguem te atacar se chegarem muito perto!",
+    ] 
+}
+
+
 #
 
 DIALOGOS = {
@@ -58,13 +69,17 @@ DIALOGOS = {
             [
                 'Ezhariel',
                 [
-                    "Bom, Sendo assim, eu lhe concederei uma classe de sua escolha",
+                    "Bom, Sendo assim, eu lhe tornarei um bravo guerreiro",
                     "Para poder se defender dos perigos que encontrará pelo caminho...",
-                    "Você Deseja ser um CAVALEIRO ou um ARQUEIRO?..."
+                    "Mas antes de prosseguir...",
+                    "Terá que passar por esse simples desafio:",
+                    "Você terá que eliminar os três Slimes que invocarei nesta sala",
+                    "Se você derrotá-los, será honrado como Cavaleiro da luz!",
+                    "Está pronto?, então vamos começar...",
                 ]
             ],
             [
-                'ESCOLHA', # esse parametro é para informar ao script que aqui acontece uma escolha do jogador... (NÃO É INTERPRETADO COMO FALA!!!!)
+                'MISSAO', # esse parametro é para informar ao script que aqui acontece alguma interpretação no código (Missao,Item,etc...)... (NÃO É INTERPRETADO COMO FALA!!!!)
             ],
         ],
     'Ezhariel1':
@@ -72,18 +87,27 @@ DIALOGOS = {
             [
                 'Ezhariel',
                 [
-                    "Agora que Você escolheu sua classe vou fazer um teste para ver suas habilidades!",
+                    "Parabéns!, vejo que você leva jeito para ser um grande aventureiro...",
+                    "Percebi que sofreu alguns danos, mas não se preocupe, irei recuperar sua vida!",
+                    "Pronto, Novo em folha!",
+                    "Bom... irei explicar como funcionam as coisas por aqui",
+                    "esta dungeon é bem mais antiga que todas as que estão estão espalhadas por ai...",
+                    "aqui possuímos quatro andares, contendo cada um seu próprio desafio...",
+                    "sendo o último andar, dominado pelo Homem Sombra...",
+                    "de onde nenhum guerreiro saiu vivo....",
                 ],
             ],
-            [
-                'Dica',
-                [
-                    "Pressione [ESPACO] para atacar os inimigos",
-                    "A Classe Cavaleiro consegue atacar com 5 metros de distância.",
-                    "A Classe Arqueiro tem somente 15 metros de alcance.",
-                ],
-            ],
+            
         ],
+    'Sylveris':
+        [
+            [
+                'Sylveris',
+                [
+                    "",
+                ]
+            ]
+        ]
 }
 
 #
@@ -97,11 +121,14 @@ def EscreverDialogo(stdscr, player : Player, falante : str, dialogo : list = [],
     curses.curs_set(0);
     stdscr.nodelay(True);
     stdscr.clear();
-    stdscr.addstr("Dica: Pressione [ESPACO] para pular as falas..");
+    stdscr.addstr("Dica: Pressione [F] para pular as falas..");
     stdscr.refresh();
     time.sleep(tempoDeDica);
     #Limpamos para mostrar a fala
     stdscr.clear();
+    #
+    while stdscr.getch() != -1:
+        pass;
     #
     for i, texto in enumerate(dialogo):
         msg = "";
@@ -113,10 +140,10 @@ def EscreverDialogo(stdscr, player : Player, falante : str, dialogo : list = [],
             else:
                 stdscr.addstr(PosicaoNaTela.y, PosicaoNaTela.x,f"{falante}: {msg}");
             stdscr.refresh();
-            winsound.Beep(1300,5);
+            winsound.Beep(1300,1);
             time.sleep(tempoDeFala);
             #Aqui deixamos o jogador apertar espaço para pular a fala
-            if stdscr.getch() == ord(' '):
+            if stdscr.getch() == ord('f'):
                 msg = texto;
                 if textoPermanente == True :
                     stdscr.addstr(PosicaoNaTela.y+i, PosicaoNaTela.x,f"{falante}: {msg}");
@@ -133,12 +160,12 @@ def EscreverDialogo(stdscr, player : Player, falante : str, dialogo : list = [],
         #Esperamos o tempo normal, ou o jogador aperta o espaco para pular
         timer = time.time();
         while time.time() - timer < tempoEntreFalas:
-            if stdscr.getch() == ord(' '):
+            if stdscr.getch() == ord('f'):
                 break;
             time.sleep(0.05);
         if textoPermanente == False:
             stdscr.clear();
-        # Espera o Input do Jogador para a próxima fala
+            # Espera o Input do Jogador para a próxima fala
 #########################################################################################################################
 
 

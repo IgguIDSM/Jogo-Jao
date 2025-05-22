@@ -31,6 +31,9 @@ class Player (Vector2):
         self._position = position;
         self._sala = sala;
     #
+    def Damage(self,amount):
+        self._vida -= amount;
+    #
     def SetDamage(self,dano):
         self._dano = dano;
     #
