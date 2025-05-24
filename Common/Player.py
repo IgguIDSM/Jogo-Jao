@@ -11,6 +11,7 @@ class Player (Vector2):
     _vida = 100;
     _stamina = 100;
     _dano = 5;
+    _velocidade = 0;
     _RetaFinal = False;
     #Internos
     _EspadaL = "\\";
@@ -25,7 +26,7 @@ class Player (Vector2):
     _lastDir = Vector2(0,0);
     _facingDir = Vector2(0,0);
     #
-    def __init__(self,nome : str,MissaoAtual : str, classe : str, inventario : list,vida : int,stamina : int ,position : Vector2,sala : str):
+    def __init__(self,nome : str,MissaoAtual : str, classe : str, inventario : list,vida : int,stamina : int , velocidade : float, position : Vector2,sala : str):
         self.nome = nome;
         self._MissaoAtual = MissaoAtual;
         self._Classe = classe;
@@ -35,6 +36,7 @@ class Player (Vector2):
         self._position = position;
         self._sala = sala;
         self._OnRoomChangedEvent = Event();
+        self._velocidade = velocidade;
     #
     def SetVida(self,amount):
         self._vida = amount;
@@ -73,7 +75,7 @@ class Player (Vector2):
         return self._vida;
     #
     def GetPosition(self):
-        return self._position;
+        return Vector2(round(self._position.x),round(self._position.y));
     #
     def GetSala(self):
         return self._sala;
@@ -96,8 +98,8 @@ class Player (Vector2):
         #
         self._facingDir = direction;
         # 
-        self._position.x += direction.x;
-        self._position.y += direction.y;
+        self._position.x += direction.x * self._velocidade;
+        self._position.y += direction.y * self._velocidade;
     #
     def GetModel(self):
         if self._lastDir.x > 0:

@@ -32,7 +32,7 @@ npcTalkDistance = 3 # Distância de Interação com um NPC;
 Projectiles : list[Projectile] = [];
 #
 #Criamos o player, passamos nome, vida, stamina, posição inicial e o nome da sala inicial
-player = Player("Cleitin","Nenhum","Nenhum",[],100,100,Vector2(3,3),"Terceiro Andar");
+player = Player("Cleitin","Nenhum","Nenhum",[],100,100,1,Vector2(3,3),"Terceiro Andar");
 
 #
 player.SetClasse('Cavaleiro');
@@ -46,6 +46,7 @@ Missoes = {
     'Mate os Slimes' : [0,3,'Incompleta'],
     'Mate as Larvas' : [0,5,'Incompleta'],
     'Derrote Velkar' : [0,1,'Incompleta'],
+    'Derrote Aylha' : [0,1,'Incompleta'],
 }
 
 
@@ -110,7 +111,7 @@ def ProjectileHandler():
     for projetil in Projectiles:
         projetil.Translate();
         # só removemos o projétil se ele atingiu alguma coisa ou chegou na sua distância máxima..
-        if projetil.DistanceToPoint(player.GetPosition()) > projetil.GetMaxDistance() or DetectOtherCollision(projetil.GetPosition(),player.GetSala()):
+        if projetil.DistanceToPoint(projetil.GetSpawnPosition()) > projetil.GetMaxDistance() or DetectOtherCollision(projetil.GetPosition(),player.GetSala()):
             Projectiles.remove(projetil);
             del projetil;
 #
@@ -262,15 +263,54 @@ def RenderRoom(stdscr,room : list, PlayerPosition : Vector2, PlayerModel : str):
                 stdscr.addstr(y,x,f"{room[y][x]}");
     stdscr.addstr("\n");
 
-#---------------------------INIMIGOS DO FINAL DO JOGO----------------------------------#
+#---------------------------VELKAR----------------------------------#
+def getRelativeValue(v,mn,mx):
+    return (v-mn)/(mn-mx);
+
 def VelkarKilledCallback(stdscr):
+    for mob in spawnedMobs:
+        if mob.GetNome() == "Velkar_Clone":
+            spawnedMobs.remove(mob);
+            del mob;
     EscreverDialogo(stdscr,player,'Velkar',DIALOGOS['Velkar'][0][2],Vector2(0,0),0.05,2,3,True);
-    EscreverDialogo(stdscr,player,'Narrador',DIALOGOS['Narrador_Terceiro_Andar'][0][2],Vector2(0,0),0.05,2,3,True);
+    EscreverDialogo(stdscr,player,'Narrador',DIALOGOS['Narrador_Morte_Velkar'][0][1],Vector2(0,0),0.05,2,3,True);
     player.AddInventario('Voz Gelida(frag)');
+    player.AddInventario('Chave do Desafio');
+    player.SetMissaoAtual('Derrote Aylha');
+
+#
+velkarClones = 0;
+def OnCloneKilled():
+    global velkarClones;
+    velkarClones -= 1;
+    if player.GetVida() < 100:
+        player.SetVida(player.GetVida() + 10);
+    if player.GetVida() > 100:
+        player.SetVida(100);
+
+def OnVelkarDamaged(position,vida):
+    r = getRelativeValue(vida,0,250);
+    global velkarClones;
+    if r < 0.75 and r >= 0.5:
+        for i in range(2):
+            if velkarClones < 2:
+                spawnedMobs.append(Inimigos.Mob(Vector2(position.x + i,position.y - i),'Velkar_Clone','§',20,'Velkar',15,0.6,4,OnCloneKilled,player));
+                velkarClones += 1;
+    elif r < 0.5 and r >= 0.25:
+        for i in range(4):
+            if velkarClones < 4:
+                spawnedMobs.append(Inimigos.Mob(Vector2(position.x + i,position.y - i),'Velkar_Clone','§',20,'Velkar',15,0.6,4,OnCloneKilled,player));
+                velkarClones += 1;
+    elif r < 0.25:
+        for i in range(6):
+            if velkarClones < 6:
+                spawnedMobs.append(Inimigos.Mob(Vector2(position.x + i,position.y - i),'Velkar_Clone','§',20,'Velkar',15,0.6,4,OnCloneKilled,player));
+                velkarClones += 1;
 #
 def Velkar(stdscr):
     spawnPoint = AcharSpawn('9',MAPA['Velkar']);
-    _velkar = Inimigos.Mob(spawnPoint,'Velkar','§',250,'Velkar',15,1.5,4,AdicionarProgresso);
+    _velkar = Inimigos.Mob(spawnPoint,'Velkar','§',250,'Velkar',15,0.8,4,AdicionarProgresso);
+    _velkar._OnMobDamage.subscribe(OnVelkarDamaged);
     _velkar.SetTarget(player);
     #
     player.SetMissaoAtual("Derrote Velkar");
@@ -280,6 +320,36 @@ def Velkar(stdscr):
     #
     spawnedMobs.append(_velkar);
     #attack Pattern
+
+
+
+
+#--------------------------------------AYLHA----------------------------------------#
+def OnAylhaKilled(stdscr):
+    for mob in spawnedMobs:
+        if mob.GetNome() == "Velkar_Clone":
+            spawnedMobs.remove(mob);
+            del mob;
+    EscreverDialogo(stdscr,player,'Velkar',DIALOGOS['Velkar'][0][2],Vector2(0,0),0.05,2,3,True);
+    EscreverDialogo(stdscr,player,'Narrador',DIALOGOS['Narrador_Terceiro_Andar'][0][3],Vector2(0,0),0.05,2,3,True);
+############################################
+    player.AddInventario('Voz Gelida(frag)');
+    player.AddInventario('Chave do Desafio');
+    player.SetMissaoAtual('Derrote Aylha');
+############################################
+def Aylha(stdscr):
+    spawnPoint = AcharSpawn('9',MAPA['Aylha']);
+    _aylha = Inimigos.Mob(spawnPoint,'Aylha','?',300,'Aylha',40,0.5,1.5,AdicionarProgresso);
+    _aylha.SetTarget(player);
+    #
+    Missoes['Derrote Aylha'].append(stdscr);
+    Missoes['Derrote Aylha'].append(OnAylhaKilled);
+    #
+    spawnedMobs.append(_aylha);
+
+
+
+
 
 
 
@@ -342,6 +412,7 @@ def TerceiroAndar(stdscr):
         EscreverDialogo(stdscr,player,'Gorzhak',DIALOGOS['Gorzhak'][0][2],Vector2(0,0),0.03,3,3,False);
         EscreverDialogo(stdscr,player,'Gorzhak',DIALOGOS['Gorzhak'][0][3],Vector2(0,0),0.03,3,3,False);
     Velkar(stdscr);
+    Aylha(stdscr);
     pass;
 #
 
@@ -404,21 +475,37 @@ def GameLoop(stdscr):
                     if not WillCollideWithOtherMobs(mob.GetPosition(),mobWalkDirection):
                         mob.Andar(Vector2(mobWalkDirection.x * mob.GetVelocity(),mobWalkDirection.y * mob.GetVelocity()));
 
-                if mob.DistanceToPlayer() < mobAttackDistance:
+                if mob.GetNome() == "Aylha":
                     if mob._mobTick > mob._tempoDeAtaque:
                         mob.ResetMobTick();
                         winsound.Beep(5000,1);
-                        player.Damage(mob.GetDamage());
+                        ShootProjectile(Vector2(mob._position.x, mob._position.y),Vector2(mobWalkDirection.x,mobWalkDirection.y),1,40);
+                else:
+                    if mob.DistanceToPlayer() < mobAttackDistance:
+                        if mob._mobTick > mob._tempoDeAtaque:
+                            mob.ResetMobTick();
+                            winsound.Beep(5000,1);
+                            player.Damage(mob.GetDamage());
+
+                
         
         #Verifica se o player está em alguma porta, se estiver muda de cena
         porta = GetClosestDoor(player);
         #
         if porta != None:
             if keyboard.is_pressed('f'):
-                player.SetSala(PORTAS[player.GetSala()][porta]);
-                porta_spawn =  AcharSpawn(SPAWN_PORTAS[GetOpositeDoor(porta)],MAPA[player.GetSala()])
-                if porta_spawn != False:
-                    player.SetPosition(porta_spawn);
+                if IsSalaTrancada(player.GetSala()):
+                    if 'Chave do Desafio' in player.GetInventario():
+                        player.SetSala(PORTAS[player.GetSala()][porta]);
+                        porta_spawn = AcharSpawn(SPAWN_PORTAS[GetOpositeDoor(porta)],MAPA[player.GetSala()]);
+                        if porta_spawn != False:
+                            player.SetPosition(porta_spawn);
+                            player._inventario.remove('Chave do Desafio');
+                else:
+                    player.SetSala(PORTAS[player.GetSala()][porta]);
+                    porta_spawn =  AcharSpawn(SPAWN_PORTAS[GetOpositeDoor(porta)],MAPA[player.GetSala()])
+                    if porta_spawn != False:
+                        player.SetPosition(porta_spawn);
         
         #antes de renderizar qualquer coisa, damos prioridade as camadas de tela
         #diálogo
@@ -474,9 +561,6 @@ def GameLoop(stdscr):
                         else:
                             if noDialog == True:
                                 EscreverDialogo(stdscr,player,"Sylveris",dialStruct[1],Vector2(0,0),0.02,3,3,True);
-                elif npc_proximo.name == 'Gorzhak':
-
-                    pass;
         #---------------------------------------------------------------------------------------------------------------------------#
 
                 #Cuida dos Dialogos Durante o Jogo 
@@ -512,7 +596,11 @@ def GameLoop(stdscr):
         #Mostra o NPC Próximo
         if porta != None:
             if porta in PORTAS[player.GetSala()]:
-                stdscr.addstr(f"\nPressione [F] para acessar a(o) {PORTAS[player.GetSala()][porta]}");
+                if IsSalaTrancada(player.GetSala()):
+                    stdscr.addstr(f"\nEsta porta precisa de uma chave para ser aberta");
+                else:
+                    stdscr.addstr(f"\nPressione [F] para acessar a(o) {PORTAS[player.GetSala()][porta]}");
+        #-------------------------------------------------------------------------
         if npc_proximo != None:
             stdscr.addstr(f"\nPressione [F] para interagir com {npc_proximo.nome}");
         #

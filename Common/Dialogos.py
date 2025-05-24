@@ -153,6 +153,13 @@ DIALOGOS = {
                 [
                     "Antes que {playerName} pudesse perguntar qualquer coisa, Gorzhak some diante da neve espessa...",
                 ],
+                
+            ]
+        ],
+    'Narrador_Morte_Velkar':
+        [
+            [
+                'Narrador',
                 [
                     "Antes de terminar sua fala, Velkar se desfaz como poeira ao vento..., deixando cair o primeiro fragmento de voz gélida."
                 ]
@@ -193,6 +200,31 @@ DIALOGOS = {
                     "Mais uma coisa....... tenha cuidado..........",
                     "esta dungeon é...............................",
                 ]
+            ]
+        ],
+    'Aylha':
+        [
+            [
+                'Aylha',
+                [
+                    "Olá aventureiro, eu sou a grande maga Aylha, e irei destruir você",
+                    "Saiba que sou incrivelmente poderosa, e não serei derrotada por um fraco aventureiro",
+                ],
+                [
+                    "como você superou a minha magia aventureiro?",
+                    "bem, eu fui finalmente libertada graças a você",
+                    "mas saiba que essa não é uma dungeon comum.....",
+                    "essa dungeon cons....",
+                ],
+            ]
+        ],
+    'Narrador_Morte_Aylha':
+        [
+            [
+                'Narrador',
+                [
+                    "Aylha após ser derrotada, ",
+                ],
             ]
         ]
 }

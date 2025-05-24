@@ -22,7 +22,7 @@ def DetectOtherCollision(pPos : Vector2, roomName : str):
         pPos (Vector2) : posição futura do jogador para verificar colisão, caso esteja colidindo retorna True, se não, Falso.
     '''
     sala = MAPA[roomName];
-    if sala[pPos.y][pPos.x] in OBJETOS_DE_COLISAO: return True;
+    if sala[round(pPos.y)][round(pPos.x)] in OBJETOS_DE_COLISAO: return True;
     return False;
 #
 def GetClosestDoor(player : Player):
@@ -62,7 +62,11 @@ def AcharSpawn(spawnPoint : str, sala : dict):
             if sala[y][x] == spawnPoint:
                 return Vector2(x,y);
     return False;
-
+#
+def IsSalaTrancada(nomeDaSala):
+    if nomeDaSala in PORTAS_TRANCADAS.keys():
+        return True;
+    return False;
 #
 def AcharPorta(porta : str, sala : dict):
     #Tentamos encontrar a porta no mapa

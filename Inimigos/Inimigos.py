@@ -1,5 +1,6 @@
 from Common.Player import Player;
 from Utils.Math_Utils import Vector2;
+from Utils.Event import Event;
 
 class Mob (Vector2):
 
@@ -13,10 +14,11 @@ class Mob (Vector2):
     _position = Vector2(0,0);
     _target = Player;
     _mobTick = 0;
+    _OnMobDamage = Event();
     #CallBacks
     _onMobKilledCallBack = None;
     #
-    def __init__(self,spawnPosition : Vector2, nome : str, modelo : str, vida : int, sala : str, dano : int, velocidade : int, tempoDeAtaque : float, OnMobKilledCallBack = None):
+    def __init__(self,spawnPosition : Vector2, nome : str, modelo : str, vida : int, sala : str, dano : int, velocidade : int, tempoDeAtaque : float, OnMobKilledCallBack = None, target : Player = None):
         self._position = spawnPosition;
         self._model = modelo;
         self._nome = nome;
@@ -26,6 +28,8 @@ class Mob (Vector2):
         self._velocidade = velocidade;
         self._tempoDeAtaque = tempoDeAtaque;
         self._onMobKilledCallBack = OnMobKilledCallBack;
+        self._OnMobDamage = Event();
+        self._target = target;
     #
     def MobTick(self,frameTime):
         self._mobTick += frameTime;
@@ -35,6 +39,7 @@ class Mob (Vector2):
     #
     def Damage(self,amount):
         self._vida -= amount;
+        self._OnMobDamage.Trigger(self.GetPosition(),self._vida);
     #
     def GetDamage(self):
         return self._dano;

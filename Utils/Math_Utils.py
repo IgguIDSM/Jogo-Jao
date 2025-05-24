@@ -25,15 +25,20 @@ class Vector2:
 class Projectile:
     _model = ['^','v','<','>'];
     _direction = Vector2(0,0);
+    _spawnPosition = Vector2(0,0);
     _position = Vector2(0,0);
     _velocity = 0;
     _maxDistance = 0;
     
     def __init__(self,spawnPosition : Vector2,velocity : int, direction : Vector2, maxDistance : int = 15):
         self._position = spawnPosition;
+        self._spawnPosition = spawnPosition;
         self._velocity = velocity;
         self._direction = direction;
         self._maxDistance = maxDistance;
+    #
+    def GetSpawnPosition(self):
+        return self._spawnPosition;
     #
     def GetMaxDistance(self):
         return self._maxDistance;
