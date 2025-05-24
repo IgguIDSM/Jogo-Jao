@@ -32,11 +32,24 @@ PROLOGO = {
 }
 
 DICAS = {
+    'DICA_PORTAS':
+    [
+        "As letras Presentes nas laterais do mapa representam Portas!",
+        "Cada letra representa a direção que essa porta irá te levar",
+        "Sendo as Possíveis portas (N,S,L,O) [Norte, Sul, Leste, Oeste]!",
+        "Caso tenha dúvidas, é só chegar perto de uma porta."
+        "Que a dica de interação irá te dizer para qual sala ela te leva.."
+    ],
     'DICA_COMBATE':
     [
         "Pressione [ESPACO] para atacar os inimigos",
         "A Sua distância de ataque é de 5 metros",
         "Os Mobs conseguem te atacar se chegarem muito perto!",
+    ],
+    'DICA_COMBATE1':
+    [
+        "As larvas não sao muito rápidas, mas causam muito dano",
+        "Talves atacar de uma distância segura seja mais adequado..",
     ] 
 }
 
@@ -104,8 +117,20 @@ DIALOGOS = {
             [
                 'Sylveris',
                 [
-                    "",
+                    "Olá jovem aventureiro, Bem vindo ao segundo andar da dungeon, eu sou Sylveris, a Guardiã da Lâmina da Luz",
+                    "eu te darei a próxima missão, você ganhará um item de sua escolha."
                 ]
+            ],
+            [
+                'MISSAO'
+            ]
+        ],
+    'Sylveris1':
+        [
+            [
+                "Parabéns aventureiro, você foi incrivel nessa missão derrotando esse monstros.. ",
+                "Como prometido você tem duas opções de escolha: O Anel da Emersão e o Colar de Vínculo",
+                "Qual você escolhe?"
             ]
         ]
 }

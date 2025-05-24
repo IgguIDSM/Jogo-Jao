@@ -40,6 +40,7 @@ player.SetClasse('Cavaleiro');
 # Após o termino da missão o CallBack dessa Missão será executado! Elemento [3] => callback lambda
 Missoes = {
     'Mate os Slimes' : [0,3,'Incompleta'],
+    'Mate as Larvas' : [0,5,'Incompleta'],
 }
 
 
@@ -134,7 +135,40 @@ def Hud(stdscr):
     stdscr.addstr(f"Stamina: {player.GetStamina()}\n");
     stdscr.addstr(f"Inventario: {player.GetInventario()}\n");
     stdscr.addstr(f"Sala Atual: {player.GetSala()}\n");
-
+##
+def MenuEscolha(stdscr, items : list):
+    curses.curs_set(0);
+    stdscr.nodelay(False);
+    #retiramos o buffer de tecla
+    while stdscr.getch() != -1:
+        pass;
+    #
+    opcoes = items;
+    selecionado = 0;
+    #
+    while True:
+        stdscr.clear();
+        for i , opcao in enumerate(opcoes):
+            if i == selecionado:
+                stdscr.attron(curses.A_REVERSE);  # Destaque
+                stdscr.addstr(i, 2 - 2, "➤ " + opcao);
+                stdscr.attroff(curses.A_REVERSE);
+            else:
+                stdscr.addstr(i,2,'' + opcao);
+        stdscr.refresh();
+        
+        tecla = stdscr.getch();
+        
+        if tecla == ord('w'):
+            selecionado = (selecionado - 1) % len(opcoes);
+        elif tecla == ord('s'):
+            selecionado = (selecionado + 1) % len(opcoes);
+        elif tecla == ord(' ') or tecla in [10,13]:
+            stdscr.clear();
+            stdscr.addstr(0, 0, f"Você escolheu: {opcoes[selecionado]} (pressione Qualquer tecla para continuar)");
+            stdscr.refresh();
+            stdscr.getch();
+            return opcoes[selecionado];
 ##
 def Menu(stdscr,isGameRunning: bool = False):
     #TODO: colocar alteração de menu, para que caso o player tenha aberto o menu durante o jogo, apareça "Continuar" ao invés de "Iniciar".
@@ -142,7 +176,10 @@ def Menu(stdscr,isGameRunning: bool = False):
     #
     curses.curs_set(0)  # Escondemos o Cursor
     stdscr.nodelay(False); # sempre aguardamos uma tecla pro próximo Update
-
+    #retiramos o buffer de tecla
+    while stdscr.getch() != -1:
+        pass;
+    #
     opcoes = ["Novo Jogo", "Carregar", "Salvar", "Opções", "Sair"] # OPÇÔESS!
     if isGameRunning : opcoes[0] = "Continuar";
     selecionado = 0;
@@ -219,11 +256,8 @@ def RenderRoom(stdscr,room : list, PlayerPosition : Vector2, PlayerModel : str):
 #-----------------------------------------------------------------------#
 
 
-
-
-
 #
-def WillCollideWithOtherMobs(checkMobPosition : Vector2,futureMobPosition : Vector2):
+def WillCollideWithOtherMobs(checkMobPosition : Vector2, futureMobPosition : Vector2):
     for mob in spawnedMobs:
         if (mob.GetPosition() != checkMobPosition) and (mob.GetPosition().Distance(futureMobPosition) < 1):
             return True;
@@ -244,6 +278,15 @@ def AdicionarProgresso():
 def MatarSlimeCompleta(stdscr):
     EscreverDialogo(stdscr,player,'Ezhariel',DIALOGOS['Ezhariel1'][0][1],Vector2(0,0),0.05,3,3,False);
     RemoveNPC("Ezhariel") # sumimos com ele
+    EscreverDialogo(stdscr,player,'DICA',DICAS['DICA_PORTAS'],Vector2(0,0),0.02,3,3,True);
+#
+def MatarLarvasCompleta(stdscr):
+    EscreverDialogo(stdscr,player,'Sylveris',DIALOGOS['Sylveris1'][0][1],Vector2(0,0),0.05,3,3,False);
+    #damos a escolha do item e depois removemos ela
+    escolha = MenuEscolha(stdscr,['Anel da Emersão','Colar de Vínculo']);
+    
+    #
+    RemoveNPC("Sylveris") # sumimos com ele
 
 
 
@@ -348,6 +391,23 @@ def GameLoop(stdscr):
                         else:
                             if noDialog == False:
                                 EscreverDialogo(stdscr,player,dialStruct[0],dialStruct[1],Vector2(0,0),0.05,3,3,False);
+                if npc_proximo == 'Sylveris':
+                    for dialStruct in DIALOGOS['Sylveris']:
+                        if dialStruct[0] == "PLAYER":
+                            if noDialog == False:
+                                EscreverDialogo(stdscr,player,player.nome,dialStruct[1],Vector2(0,0),0.05,3,3,False);
+                        elif dialStruct[0] == "MISSAO":
+                            #Mostramos a dica de combate:
+                            if noDialog == False:
+                                EscreverDialogo(stdscr,player,"DICA",DICAS['DICA_COMBATE1'],Vector2(0,0),0.02,3,3,True);
+                            #
+                            Missoes["Mate as Larvas"].append(stdscr);
+                            Missoes["Mate as Larvas"].append(MatarLarvasCompleta);
+                            #
+                            spawns = [Vector2(11,1),Vector2(14,6),Vector2(20,8),Vector2(21,10),Vector2(25,3)]
+                            for i,spawn in enumerate(spawns):
+                                larva = Inimigos.Mob(spawn,"Larva","-=-",150,player.GetSala(),6,(i+1) * 0.03,3.5, AdicionarProgresso);
+        
         #---------------------------------------------------------------------------------------------------------------------------#
 
                 #Cuida dos Dialogos Durante o Jogo 
