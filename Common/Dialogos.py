@@ -37,8 +37,8 @@ DICAS = {
         "As letras Presentes nas laterais do mapa representam Portas!",
         "Cada letra representa a direção que essa porta irá te levar",
         "Sendo as Possíveis portas (N,S,L,O) [Norte, Sul, Leste, Oeste]!",
-        "Caso tenha dúvidas, é só chegar perto de uma porta."
-        "Que a dica de interação irá te dizer para qual sala ela te leva.."
+        "Caso tenha dúvidas, é só chegar perto de uma porta.",
+        "Que a dica de interação irá te dizer para qual sala ela te leva..",
     ],
     'DICA_COMBATE':
     [
@@ -48,7 +48,7 @@ DICAS = {
     ],
     'DICA_COMBATE1':
     [
-        "As larvas não sao muito rápidas, mas causam muito dano",
+        "As larvas não são muito rápidas, mas causam muito dano",
         "Talves atacar de uma distância segura seja mais adequado..",
     ] 
 }
@@ -117,8 +117,11 @@ DIALOGOS = {
             [
                 'Sylveris',
                 [
-                    "Olá jovem aventureiro, Bem vindo ao segundo andar da dungeon, eu sou Sylveris, a Guardiã da Lâmina da Luz",
-                    "eu te darei a próxima missão, você ganhará um item de sua escolha."
+                    "Olá jovem aventureiro, Bem vindo ao segundo andar, eu sou Sylveris, a Guardiã da Lâmina da Luz",
+                    "eu te darei a próxima missão e se completar, você ganhará um item de sua escolha.",
+                    "mas não pense que será fácil...",
+                    "essas larvas são bem traiçoeiras...",
+                    "Quero que você elimine essas larvas nojentas do meu jardim!"
                 ]
             ],
             [
@@ -128,9 +131,68 @@ DIALOGOS = {
     'Sylveris1':
         [
             [
-                "Parabéns aventureiro, você foi incrivel nessa missão derrotando esse monstros.. ",
-                "Como prometido você tem duas opções de escolha: O Anel da Emersão e o Colar de Vínculo",
-                "Qual você escolhe?"
+                'Sylveris',
+                [
+                    "Parabéns aventureiro, você foi incrivel nessa missão derrotando esses monstros.. ",
+                    "Como prometido você tem duas opções de escolha: O Anel da Emersão e o Colar de Vínculo",
+                    "Qual você escolhe?"
+                ],
+                [
+                    "Pobre aventureiro, não sabe o destino que lhe aguarda...",
+                ]
+            ]
+        ],
+    'Narrador_Terceiro_Andar':
+        [
+            [
+                'Narrador',
+                [
+                    "Ao chegar no terceiro andar {playerName} se depara com um ambiente extremamente frio, onde a neve tomava conta...",
+                    "de repende uma forte nevasca atinge {playerName}, e dessa nevasca aparece Gorzhak, um Orc de gelo.",
+                ],
+                [
+                    "Antes que {playerName} pudesse perguntar qualquer coisa, Gorzhak some diante da neve espessa...",
+                ],
+                [
+                    "Antes de terminar sua fala, Velkar se desfaz como poeira ao vento..., deixando cair o primeiro fragmento de voz gélida."
+                ]
+            ]
+        ],
+    'Gorzhak':
+        [
+            [
+                'Gorzhak',
+                [
+                    "Olá aventureiro, vejo que conseguiu vencer o desafio de Sylveris, eu sou Gorzhak, o Coração Congelado da Montanha Partida",
+                    "Eu lhe darei sua última missão, e se provar que é dígno, lhe concederei a magia dos guardiões da luz, junto com a Espada Celeste.",
+                    "Caso tenha sucesso neste desafio, peço que tome cuidado ao partir para enfrentar o Homem Sombra...",
+                ],
+                [
+                    "O seu primeiro desafio será Velkar, dono da Lâmina Partida, um espectro sorrateiro, que utiliza ataques rápidos e cria cópias falsas de si mesmo..",
+                    "O segundo é Aylha, a que Sussura, uma ex-maga que ataca com projéteis de luz, que quando atingem seu alvo o desacelera além de causar muito dano.",
+                    "O terceiro e mais Forte é Thornak, o Indomável, Um Gigante de gelo com uma força descomunal...",
+                ],
+                [
+                    "Após derrotar Velkar, poderá seguir adiante para os demais desafios",
+                    "Cada um deixará contigo um fragmento de voz gélida",
+                    'Quando estiver com os três fragmentos eu retornarei....',
+                ]
+            ]
+        ],
+    'Velkar':
+        [
+            [
+                'Velkar',
+                [
+                    "Vejo que teve coragem o suficiente para me enfrentar, mas saiba que fui um grande guerreiro quando vivo e não serei derrotado facilmente...",
+                    "VENHA AVENTUREIRO!!!",
+                ],
+                [
+                    "Você foi incrível batalhando, obrigado por me libertar dessa prisão sem fim....",
+                    "boa sorte com seus próximos desafios aventureiro....",
+                    "Mais uma coisa....... tenha cuidado..........",
+                    "esta dungeon é...............................",
+                ]
             ]
         ]
 }

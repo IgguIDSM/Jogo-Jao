@@ -9,6 +9,8 @@ import time;
 import curses;
 import keyboard;
 #
+scr = None;
+#
 mousePosition = Vector2(0,0); # DESABILITADO POR BUG
 #
 pause = False; # define se o jogo está pausado |TODO|;
@@ -19,16 +21,18 @@ noDialog = True; # Define se jogo vai mostrar diálogos ou não, "UTILIZADO PARA
 
 fps = 120; # Define o FPS do jogo, o Pace ou Frames por Segundo.
 
+estaNaRetaFinal = False;
+
 mobAttackDistance = 3; # distancia de ataque dos mobs
 
 playerMeleeDistance = 5; # distância de ataque do player;
 
-npcTalkDistance = 5 # Distância de Interação com um NPC;
+npcTalkDistance = 3 # Distância de Interação com um NPC;
 
 Projectiles : list[Projectile] = [];
 #
 #Criamos o player, passamos nome, vida, stamina, posição inicial e o nome da sala inicial
-player = Player("Cleitin","Nenhum","Nenhum",[],100,100,Vector2(3,6),"Entrada");
+player = Player("Cleitin","Nenhum","Nenhum",[],100,100,Vector2(3,3),"Terceiro Andar");
 
 #
 player.SetClasse('Cavaleiro');
@@ -41,16 +45,25 @@ player.SetClasse('Cavaleiro');
 Missoes = {
     'Mate os Slimes' : [0,3,'Incompleta'],
     'Mate as Larvas' : [0,5,'Incompleta'],
+    'Derrote Velkar' : [0,1,'Incompleta'],
 }
 
 
 #
 spawnedMobs: list[Inimigos.Mob] = [];
+#Spawnamos os mobs que não são de missão
+#Zumbis
+zombieSpawns = [Vector2(10,2),Vector2(10,7),Vector2(7,5)];
+for i,zombieSpawn in enumerate(zombieSpawns):
+    zombie = Inimigos.Mob(zombieSpawn,"Zumbi",'z',70,'Sala dos Zumbis',3,(i+1) * 0.3,1.5,None);
+    zombie.SetTarget(player);
+    spawnedMobs.append(zombie);
 #
 
 #
 spawnedNPCS: list[Npc] = [];
 spawnedNPCS.append(Npc('Ezhariel','e',[],100,100,Vector2(34,6),'Entrada')); # Ezhariel é o nosso npc da entrada (o último é o boss OOOOO)
+spawnedNPCS.append(Npc('Sylveris','s',[],100,100,Vector2(22,7),'Segundo Andar'));
 #
 def RemoveNPC(nome):
     for npc in spawnedNPCS:
@@ -140,9 +153,6 @@ def MenuEscolha(stdscr, items : list):
     curses.curs_set(0);
     stdscr.nodelay(False);
     #retiramos o buffer de tecla
-    while stdscr.getch() != -1:
-        pass;
-    #
     opcoes = items;
     selecionado = 0;
     #
@@ -176,9 +186,6 @@ def Menu(stdscr,isGameRunning: bool = False):
     #
     curses.curs_set(0)  # Escondemos o Cursor
     stdscr.nodelay(False); # sempre aguardamos uma tecla pro próximo Update
-    #retiramos o buffer de tecla
-    while stdscr.getch() != -1:
-        pass;
     #
     opcoes = ["Novo Jogo", "Carregar", "Salvar", "Opções", "Sair"] # OPÇÔESS!
     if isGameRunning : opcoes[0] = "Continuar";
@@ -222,6 +229,7 @@ def Menu(stdscr,isGameRunning: bool = False):
                 stdscr.refresh();
                 stdscr.getch();
 #
+NO_RENDER = ['0','1','2','3','9'];
 # Renderiza a sala (Não consegui manter no Utils.py porque python é cheio de palhaçada)
 def RenderRoom(stdscr,room : list, PlayerPosition : Vector2, PlayerModel : str):
     mapSize = GetRoomSize(room);
@@ -250,10 +258,42 @@ def RenderRoom(stdscr,room : list, PlayerPosition : Vector2, PlayerModel : str):
             # Renderizamos por ultimo o player
             stdscr.addstr(pos.y,pos.x,PlayerModel);
             #após renderizálos, renderizamos o resto do mapa
-            stdscr.addstr(y,x,f"{room[y][x]}");
+            if room[y][x] not in NO_RENDER: # se o que estamos renderizando não estiver na lista de Não renderizar, então mostramos
+                stdscr.addstr(y,x,f"{room[y][x]}");
     stdscr.addstr("\n");
 
-#-----------------------------------------------------------------------#
+#---------------------------INIMIGOS DO FINAL DO JOGO----------------------------------#
+def VelkarKilledCallback(stdscr):
+    EscreverDialogo(stdscr,player,'Velkar',DIALOGOS['Velkar'][0][2],Vector2(0,0),0.05,2,3,True);
+    EscreverDialogo(stdscr,player,'Narrador',DIALOGOS['Narrador_Terceiro_Andar'][0][2],Vector2(0,0),0.05,2,3,True);
+    player.AddInventario('Voz Gelida(frag)');
+#
+def Velkar(stdscr):
+    spawnPoint = AcharSpawn('9',MAPA['Velkar']);
+    _velkar = Inimigos.Mob(spawnPoint,'Velkar','§',250,'Velkar',15,1.5,4,AdicionarProgresso);
+    _velkar.SetTarget(player);
+    #
+    player.SetMissaoAtual("Derrote Velkar");
+    #
+    Missoes["Derrote Velkar"].append(stdscr);
+    Missoes["Derrote Velkar"].append(VelkarKilledCallback);
+    #
+    spawnedMobs.append(_velkar);
+    #attack Pattern
+
+
+
+
+
+
+
+
+
+
+
+
+
+#--------------------------------------------------------------------------------------#
 
 
 #
@@ -277,25 +317,47 @@ def AdicionarProgresso():
 #CUIDA DOS CALLBACKS DE MISSÃO COMPLETA
 def MatarSlimeCompleta(stdscr):
     EscreverDialogo(stdscr,player,'Ezhariel',DIALOGOS['Ezhariel1'][0][1],Vector2(0,0),0.05,3,3,False);
+    #restauramos a vida do player, como recompensa
+    player.SetVida(100);
     RemoveNPC("Ezhariel") # sumimos com ele
     EscreverDialogo(stdscr,player,'DICA',DICAS['DICA_PORTAS'],Vector2(0,0),0.02,3,3,True);
+
 #
 def MatarLarvasCompleta(stdscr):
     EscreverDialogo(stdscr,player,'Sylveris',DIALOGOS['Sylveris1'][0][1],Vector2(0,0),0.05,3,3,False);
     #damos a escolha do item e depois removemos ela
-    escolha = MenuEscolha(stdscr,['Anel da Emersão','Colar de Vínculo']);
-    
+    escolha = MenuEscolha(stdscr,['Anel da Emersão','Colar do Vínculo Eterno']);
+    if escolha == "Colar do Vínculo Eterno":
+        EscreverDialogo(stdscr,player,'Sylveris',DIALOGOS['Sylveris2'][0][2]);
+    player.AddInventario(escolha);
     #
-    RemoveNPC("Sylveris") # sumimos com ele
+    RemoveNPC("Sylveris") # sumimos com ela
 
 
+#Precisamos de uma função só para o terceiro andar porque as coisas aqui são muito específicas
+def TerceiroAndar(stdscr):
+    if noDialog == False:
+        EscreverDialogo(stdscr,player,'Narrador',DIALOGOS['Narrador_Terceiro_Andar'][0][1],Vector2(0,0),0.03,3,3,False);
+        EscreverDialogo(stdscr,player,'Gorzhak',DIALOGOS['Gorzhak'][0][1],Vector2(0,0),0.03,3,3,False);
+        EscreverDialogo(stdscr,player,'Gorzhak',DIALOGOS['Gorzhak'][0][2],Vector2(0,0),0.03,3,3,False);
+        EscreverDialogo(stdscr,player,'Gorzhak',DIALOGOS['Gorzhak'][0][3],Vector2(0,0),0.03,3,3,False);
+    Velkar(stdscr);
+    pass;
+#
 
-# Loop Principal do Game
+def OnRoomChanged(sala : str):
+    if sala == "Velkar":
+        EscreverDialogo(scr,player,'Velkar',DIALOGOS['Velkar'][0][1],Vector2(0,0),0.05,3,3,True);        
+
+#
 def GameLoop(stdscr):
     #Se a tela estiver muito pequena pedimos para o jogador aumentar o tamanho do console (40x130);
+    global scr;
+    scr = stdscr;
     curses.curs_set(0);
     frameTime = GetFPS();
     y,x = 0,0;
+    player._OnRoomChangedEvent.subscribe(OnRoomChanged);
     while x <= 130 and y <= 40:
         y,x = stdscr.getmaxyx();
         stdscr.clear();
@@ -306,14 +368,11 @@ def GameLoop(stdscr):
     stdscr.addstr(f"O Tamanho da tela Está Adequado!\n");
     stdscr.addstr(f"Iniciando o Jogo...");
     stdscr.refresh();
-    time.sleep(2);
     #
-
     # 60,10 -- posição do npc teste
     # Antes mesmo de começarmos, carregamos a intro e o menu principal
     if noDialog == False:
         EscreverDialogo(stdscr,player,'INTRO',DIALOGOS['INTRO'], Vector2(0,0));
-
     #Menu
     #rodamos o menu e a partir dele fazemos o resto
     Menu(stdscr);
@@ -352,13 +411,14 @@ def GameLoop(stdscr):
                         player.Damage(mob.GetDamage());
         
         #Verifica se o player está em alguma porta, se estiver muda de cena
-        porta =  IsPlayerOnDoor(newPlayerPos,player);
-
-        if porta is not False:
-            player.SetSala(PORTAS[player.GetSala()][porta]);
-            posicao_porta =  AcharPorta(GetOpositeDoor(porta),MAPA[player.GetSala()]);
-            if posicao_porta is not False:
-                player.SetPosition(GetPlayerDoorPosition(porta,posicao_porta));
+        porta = GetClosestDoor(player);
+        #
+        if porta != None:
+            if keyboard.is_pressed('f'):
+                player.SetSala(PORTAS[player.GetSala()][porta]);
+                porta_spawn =  AcharSpawn(SPAWN_PORTAS[GetOpositeDoor(porta)],MAPA[player.GetSala()])
+                if porta_spawn != False:
+                    player.SetPosition(porta_spawn);
         
         #antes de renderizar qualquer coisa, damos prioridade as camadas de tela
         #diálogo
@@ -391,14 +451,15 @@ def GameLoop(stdscr):
                         else:
                             if noDialog == False:
                                 EscreverDialogo(stdscr,player,dialStruct[0],dialStruct[1],Vector2(0,0),0.05,3,3,False);
-                if npc_proximo == 'Sylveris':
+                # SE O NPC FOR O EZHARIEL (CUIDAREMOS DAS MISSÕES AQ)
+                elif npc_proximo.nome == 'Sylveris':
                     for dialStruct in DIALOGOS['Sylveris']:
                         if dialStruct[0] == "PLAYER":
                             if noDialog == False:
                                 EscreverDialogo(stdscr,player,player.nome,dialStruct[1],Vector2(0,0),0.05,3,3,False);
                         elif dialStruct[0] == "MISSAO":
                             #Mostramos a dica de combate:
-                            if noDialog == False:
+                            if noDialog == True: # Trocar depois
                                 EscreverDialogo(stdscr,player,"DICA",DICAS['DICA_COMBATE1'],Vector2(0,0),0.02,3,3,True);
                             #
                             Missoes["Mate as Larvas"].append(stdscr);
@@ -406,8 +467,16 @@ def GameLoop(stdscr):
                             #
                             spawns = [Vector2(11,1),Vector2(14,6),Vector2(20,8),Vector2(21,10),Vector2(25,3)]
                             for i,spawn in enumerate(spawns):
-                                larva = Inimigos.Mob(spawn,"Larva","-=-",150,player.GetSala(),6,(i+1) * 0.03,3.5, AdicionarProgresso);
-        
+                                larva = Inimigos.Mob(spawn,"Larva","-=-",150,player.GetSala(),6,(i+1) * 0.3,3.5, AdicionarProgresso);
+                                larva.SetTarget(player);
+                                spawnedMobs.append(larva);
+                            player.SetMissaoAtual("Mate as Larvas");
+                        else:
+                            if noDialog == True:
+                                EscreverDialogo(stdscr,player,"Sylveris",dialStruct[1],Vector2(0,0),0.02,3,3,True);
+                elif npc_proximo.name == 'Gorzhak':
+
+                    pass;
         #---------------------------------------------------------------------------------------------------------------------------#
 
                 #Cuida dos Dialogos Durante o Jogo 
@@ -427,6 +496,13 @@ def GameLoop(stdscr):
         
             
         #--------------------------------------------------------------------------------------------------------#
+        #Cuida do Final do Jogo
+        if player.GetSala() == 'Terceiro Andar' and player._RetaFinal == False:
+            player._RetaFinal = True;
+            TerceiroAndar(stdscr);
+        
+        
+        
         #CUIDA DA MISSAO ATUAL
 
         MissaoManager();
@@ -434,6 +510,9 @@ def GameLoop(stdscr):
         #Renderiza a Tela
         RenderRoom(stdscr,MAPA[player.GetSala()],player.GetPosition(),player.GetModel());
         #Mostra o NPC Próximo
+        if porta != None:
+            if porta in PORTAS[player.GetSala()]:
+                stdscr.addstr(f"\nPressione [F] para acessar a(o) {PORTAS[player.GetSala()][porta]}");
         if npc_proximo != None:
             stdscr.addstr(f"\nPressione [F] para interagir com {npc_proximo.nome}");
         #

@@ -1,4 +1,5 @@
 from Utils.Math_Utils import Vector2;
+from Utils.Event import Event;
 class Player (Vector2):
     _sala = "Dojo"; # define a sala de spawn do jogador
     #parametros do jogador
@@ -10,12 +11,15 @@ class Player (Vector2):
     _vida = 100;
     _stamina = 100;
     _dano = 5;
+    _RetaFinal = False;
     #Internos
     _EspadaL = "\\";
     _EspadaR = "/";
     #
     _ArcoL = "(";
     _ArcoR = ")";
+    #Eventos
+    _OnRoomChangedEvent = Event();
     #
     _position = Vector2(0,0);
     _lastDir = Vector2(0,0);
@@ -30,6 +34,13 @@ class Player (Vector2):
         self._stamina = stamina;
         self._position = position;
         self._sala = sala;
+        self._OnRoomChangedEvent = Event();
+    #
+    def SetVida(self,amount):
+        self._vida = amount;
+    #
+    def AddInventario(self, item):
+        self._inventario.append(item);
     #
     def Damage(self,amount):
         self._vida -= amount;
@@ -69,6 +80,7 @@ class Player (Vector2):
     #
     def SetSala(self,sala : str):
         self._sala = sala;
+        self._OnRoomChangedEvent.Trigger(sala);
     #
     def SetPosition(self,Position : Vector2):
         self._position = Position;    
