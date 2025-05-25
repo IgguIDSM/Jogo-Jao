@@ -42,6 +42,9 @@ Também é utilizado a tecla C para o ataque especial conquistado ao avançar no
 - Desenvolvimento Geral: Igor dos Santos Moura
 
 ## Screenshots
-! [Sala inicial](/Screenshots/s1.png)
-! [Primeiros Inimigos](/Screenshots/s2.png)
-! [Segundo Andar](/Screenshots/s3.png)
+
+![s1](https://github.com/user-attachments/assets/c1cbe97a-fe18-43c9-9347-5e84e7829eca)
+
+![s2](https://github.com/user-attachments/assets/cae50510-0023-44c1-b984-3c662f9f9187)
+
+![s3](https://github.com/user-attachments/assets/c6d8f0bb-d1b9-4892-b684-8cff7d3b2597)
