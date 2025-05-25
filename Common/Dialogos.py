@@ -335,7 +335,7 @@ DIALOGOS = {
                     "Sistema de Diálogos: Igor dos Santos Moura.",
                     "Habilidades e Items do Personagem: Rafael Cardoso.",
                     "Produção Geral: Rafael Cardoso.",
-                    "Chefe de Desenvolvimento: Igor dos Santos Moura."
+                    "Desenvolvimento Geral: Igor dos Santos Moura."
                 ]
             ]
         ]
