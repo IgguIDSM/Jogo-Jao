@@ -41,4 +41,7 @@ Também é utilizado a tecla C para o ataque especial conquistado ao avançar no
 - Produção Geral: Rafael Cardoso.
 - Desenvolvimento Geral: Igor dos Santos Moura
 
-
+## Screenshots
+! [Sala inicial](/Screenshots/s1.png)
+! [Primeiros Inimigos](/Screenshots/s2.png)
+! [Segundo Andar](/Screenshots/s3.png)
