@@ -87,6 +87,14 @@ class Player (Vector2):
     def SetPosition(self,Position : Vector2):
         self._position = Position;    
     #
+    def SetStamina(self,amount):
+        self._stamina = amount;
+    #
+    def RestoreStamina(self,frameTime,amount):
+        if self._stamina < 100: 
+            self._stamina += frameTime * amount;
+        if self._stamina > 100:
+            self._stamina == 100;
     def GetFacingDiretion(self):
         return self._facingDir;
     #

@@ -50,7 +50,15 @@ DICAS = {
     [
         "As larvas não são muito rápidas, mas causam muito dano",
         "Talves atacar de uma distância segura seja mais adequado..",
-    ] 
+    ],
+    'DICA_LAMINA_LUZ':
+    [
+        "Nova Habilidade: Lâmina da Luz!",
+        "Essa habilidade concentra toda a sua força em um único corte, causando um impacto poderoso",
+        "E muito dano!, porém ao custo de 75 pontos de Stamina.",
+        "é capaz de reduzir a vida do Monstro pela metade, e se caso o monstro tenha 50 pontos de vida",
+        "será eliminado.."
+    ]
 }
 
 
@@ -60,7 +68,6 @@ DIALOGOS = {
     'INTRO':
         [
             "Bem Vindo ao Dungeons Conquest!",
-            "Fique a vontade para mudar as configurações no menu principal!",
             "O Jogo Possui Dois possíveis finais, aceita o desafio?",
             "Bom, Boa Jogatina!",
         ],
@@ -176,13 +183,12 @@ DIALOGOS = {
                 ],
                 [
                     "O seu primeiro desafio será Velkar, dono da Lâmina Partida, um espectro sorrateiro, que utiliza ataques rápidos e cria cópias falsas de si mesmo..",
-                    "O segundo é Aylha, a que Sussura, uma ex-maga que ataca com projéteis de luz, que quando atingem seu alvo o desacelera além de causar muito dano.",
-                    "O terceiro e mais Forte é Thornak, o Indomável, Um Gigante de gelo com uma força descomunal...",
+                    "O segundo e último e mais Forte é Thornak, o Indomável, Um Gigante de gelo com uma força descomunal...",
                 ],
                 [
-                    "Após derrotar Velkar, poderá seguir adiante para os demais desafios",
+                    "Após derrotar Velkar, poderá seguir adiante para o Thornak",
                     "Cada um deixará contigo um fragmento de voz gélida",
-                    'Quando estiver com os três fragmentos eu retornarei....',
+                    'Quando estiver com os dois fragmentos eu retornarei....',
                 ]
             ]
         ],
@@ -202,29 +208,135 @@ DIALOGOS = {
                 ]
             ]
         ],
-    'Aylha':
-        [
-            [
-                'Aylha',
-                [
-                    "Olá aventureiro, eu sou a grande maga Aylha, e irei destruir você",
-                    "Saiba que sou incrivelmente poderosa, e não serei derrotada por um fraco aventureiro",
-                ],
-                [
-                    "como você superou a minha magia aventureiro?",
-                    "bem, eu fui finalmente libertada graças a você",
-                    "mas saiba que essa não é uma dungeon comum.....",
-                    "essa dungeon cons....",
-                ],
-            ]
-        ],
-    'Narrador_Morte_Aylha':
+    'Narrador_Thornak':
         [
             [
                 'Narrador',
                 [
-                    "Aylha após ser derrotada, ",
+                    "logo ao entrar na sala {playerName} acaba pisando em alguns galhos secos no chão acordando Thornak",
+                    "Thornak olha para {playerName} com um olhar de desprezo e diz...",
+                ]
+            ]
+        ],
+    'Thornak':
+        [
+            [
+                'Thornak',
+                [
+                    "Criatura insolente, você tem coragem de vir me enfrentar? Saiba que eu irei destrui-lo sem piedade...",
                 ],
+                [
+                    "Incrivel aventureiro, você saiu vitorioso desse combate mas tem algo que preciso te contar...",
+                    "cuidado com essa dungeon, ela não é uma dungeon normal, essa é uma dungeon viva...",
+                    "que consome aos pouco todos dentro dela e os transformam em seus servos...",
+                    "o monstro no ultimo andar é.....",
+                ]
+            ]
+        ],
+    'Narrador_Morte_Thornak': 
+        [
+            [
+                'Narrador',
+                [
+                    "Depois de Thornak revelar um segredo da dungeon para {playerName} ele vira poeira, e de seu corpo cai o ultimo fragmento de voz gélida...",
+                    "de repente os dois fragmentos começam a voar na frente de {playerName} virando uma runa extremamente brilhante",
+                    "dessa runa aparece Gorzhak, que diz:",
+                ]
+            ]
+        ],
+    'Gorzhak1':
+        [
+            [
+                'Gorzhak',
+                [
+                    "Realmente você é forte caro aventureiro, lutou contra três espectros e retornou com vida, bem, aqui está sua recompensa..."
+                ],
+                [
+                    "Vejo que você está pronto para enfrentar o ultimo andar dessa dungeon, boa sorte aventureiro!"
+                ]
+            ]
+        ],
+    'Ezhariel2':
+        [
+            [
+                'Ezhariel',
+                [
+                    "Ola grande aventureiro, vejo que sobreviveu ate o último andar, mas tem algo que eu não o contei, eu sou o chefe desta dungeon",
+                    "Mais conhecido como Homem Sombra, mas pode me chamar de Litch...",
+                ],
+            ]
+        ],
+    'Litch':
+        [
+            [
+                'Litch',
+                [
+                    "Agora a brincadeira acabou caro guerreiro, você me divertiu esse tempo que esteve nessa dungeon",
+                    "mas agora eu irei destruí-lo e irei roubar sua alma",
+                ],
+                [
+                    "Litch Invocando seu cajado encara {playerName} com um olhar feroz e diz:",
+                ],
+                [
+                    "VOCÊ ESTÁ MORTO! MUAHAHAHAHA",
+                ]
+            ]
+        ],
+    'Final_1':
+        [
+            [
+                'Narrador',
+                [
+                    "Litch, após ser derrotado cai de joelhos em frente a {playerName}",
+                    "Aceitando seu destino, Litch é arrastado por correntes espectrais que surgem do chão, levando Litch",
+                    "e o selando novamente...",
+                    "{playerName} horrorizado com o que presenciou, percebe que o seu Anel da Emersão, começa a vibrar em seu dedo",
+                    "e começa a voar bem a sua frente, de repente um portal surge e uma voz diz a {playerName} que essa é a saída.",
+                    "ao retornar ao seu mundo, percebeu que havia retornado com todo o seu equipamento adquirido",
+                    "{playerName} tenta explicar brevemente o que havia acontecido, pois na visão dos seus companheiros...",
+                    "ele simplesmente havia tocado na pedra, sumido, e logo depois de alguns segundos, retornado...",
+                ],
+            ]
+        ],
+    'Final_2':
+        [
+            [
+                'Narrador',
+                [
+                    "Litch, Após de ser derrotado, cai de joelhos em frente a {playerName}",
+                    "Aceitando seu destino, Litch aguarda que as correntes apareçam para o levar...",
+                    "Mas algo surpreendente acontece...",
+                    "As correntes surgem do chão prendendo {playerName}",
+                ],
+                [
+                    "Você me derrotou, mas por conta desse colar, você será forçado pela dungeon a se tornar o Novo Homem Sombra...",
+                    "Até que seja derrotado, por um bravo guerreiro como você... e que tenha... escohido.... esse colar.....",
+                ],
+                [
+                    "Após muita dificuldade para terminar sua fala, Litch perde totalmente suas forças, e é levado por uma luz intensa..",
+                    "Litch é Liberto após séculos preso naquela dimensão e finalmente retorna para o seu mundo,",
+                    "Do momento que tinha sido preso pela dungeon...",
+                    "Enquanto {playerName} desmaiado, é transformado no novo Homem Sombra...",
+                ],
+                [
+                    "Que pena, perdi o meu melhor guerreiro..., mas não tem problema...",
+                    "Chegou mais um para a minha coleção......"
+                ]
+            ]
+        ],
+    'Creditos':
+        [
+            [
+                'Creditos',
+                [
+                    "Desenvolvido por: Rafael Cardoso e Igor dos Santos Moura.",
+                    "Sistema de Combate e movimentação: Igor dos Santos Moura.",
+                    "História, Mapa e Personagens: Rafael Cardoso.",
+                    "Sistema de Diálogos: Igor dos Santos Moura.",
+                    "Habilidades e Items do Personagem: Rafael Cardoso.",
+                    "Produção Geral: Rafael Cardoso.",
+                    "Chefe de Desenvolvimento: Igor dos Santos Moura."
+                ]
             ]
         ]
 }

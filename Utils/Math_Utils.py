@@ -24,18 +24,22 @@ class Vector2:
 #
 class Projectile:
     _model = ['^','v','<','>'];
+    _shooter = "";
     _direction = Vector2(0,0);
     _spawnPosition = Vector2(0,0);
     _position = Vector2(0,0);
     _velocity = 0;
+    _damage = 0;
     _maxDistance = 0;
     
-    def __init__(self,spawnPosition : Vector2,velocity : int, direction : Vector2, maxDistance : int = 15):
+    def __init__(self,spawnPosition : Vector2,velocity : int, direction : Vector2, maxDistance : int = 15,damage : int = 4,shooter : str = "PLAYER"):
         self._position = spawnPosition;
         self._spawnPosition = spawnPosition;
         self._velocity = velocity;
         self._direction = direction;
         self._maxDistance = maxDistance;
+        self._damage = damage;
+        self._shooter = shooter;
     #
     def GetSpawnPosition(self):
         return self._spawnPosition;
