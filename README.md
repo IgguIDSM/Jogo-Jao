@@ -20,7 +20,8 @@ O jogo Utiliza de Bibliotecas internas e de terceiros como:
 - time
 ## Como Jogar
 O Jogo possui um sistema de movimentação simples utilizando as teclas WASD (Movimento), e ESPAÇO para Atacar
-Também é utilizado a tecla C para o ataque especial conquistado ao avançar no jogo.
+Também é utilizado a tecla C para o ataque especial conquistado ao avançar no jogo e é utilizado a tecla F para
+interagir com personagens, portas e pular falas.
 
 ## Implementações:
 - Sistema de diálogo no estilo Rolling Text (Rolagem de Texto).
