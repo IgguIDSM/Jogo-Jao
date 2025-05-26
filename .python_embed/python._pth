@@ -1,0 +1,5 @@
+python39.zip
+.
+Lib
+Lib\site-packages
+import site

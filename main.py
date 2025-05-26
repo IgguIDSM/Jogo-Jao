@@ -1,4 +1,5 @@
 #Imports
+import curses;
 from Utils.Utils import *;
 from Inimigos import Inimigos;
 from Utils.Math_Utils import Vector2, Projectile;
@@ -6,7 +7,6 @@ from Common.Dialogos import *;
 from Common.Mapa import *;
 from Common.Npc import *;
 import time;
-import curses;
 import keyboard;
 #
 scr = None;
@@ -32,8 +32,25 @@ npcTalkDistance = 3 # Distância de Interação com um NPC;
 Projectiles : list[Projectile] = [];
 #
 #Criamos o player, passamos nome, vida, stamina, posição inicial e o nome da sala inicial
+def wrapper(func, *args, **kwds):
+    import curses
+    import sys
 
+    # Initialize curses
+    stdscr = curses.initscr()
+    curses.noecho()
+    curses.cbreak()
+    stdscr.keypad(True)
 
+    try:
+        return func(stdscr, *args, **kwds)
+    finally:
+        # Shutdown curses cleanly
+        stdscr.keypad(False)
+        curses.echo()
+        curses.nocbreak()
+        curses.endwin()
+# Criamos o wrapper
 nomeJogador = input("Escolha o nome do seu personagem: ");
 
 if nomeJogador == '':
@@ -737,7 +754,7 @@ def GameLoop(stdscr):
 #iniciamos o game mas garantimos que nada vai dar errado ;-;
 
 if __name__ == '__main__':
-    curses.wrapper(GameLoop);
+    wrapper(GameLoop);
 
 
 
