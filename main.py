@@ -594,7 +594,6 @@ def GameLoop(stdscr):
         if player.GetVida() <= 0:
             morte = ["Infelizmente o Bravo Guerreiro {playerName} não resistiu aos perigos daquele lugar.....","Você Morreu, Fim de Jogo."]
             EscreverDialogo(stdscr,player,'Narrador',morte,Vector2(0,0),0.05,3,0,True);
-            GameLoop(stdscr);
             break;
 
         # Faz os mobs andarem em direcao ao player e atacarem
